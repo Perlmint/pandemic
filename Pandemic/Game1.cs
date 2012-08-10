@@ -23,6 +23,8 @@ namespace Pandemic
         Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         ScreenManager screenManager;
 
+        Player player;
+
         public delegate void keyboardEventListener();
 
         public Game1()
@@ -45,6 +47,9 @@ namespace Pandemic
         {
             // TODO: Add your initialization logic here
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
+            player = new Player();
+            player.Initialize(this);
+            player.Spawn(new Vector2(100, 100));
             base.Initialize();
         }
 
@@ -56,6 +61,12 @@ namespace Pandemic
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Dictionary<Player.State, string> pathDic = new Dictionary<Player.State,string>();
+            pathDic.Add(Player.State.alive, "player");
+            pathDic.Add(Player.State.dead, "player");
+
+            player.LoadContent(Content, pathDic);
 
             // TODO: use this.Content to load your game content here
         }
@@ -80,6 +91,8 @@ namespace Pandemic
 
             ProcessKeyboardEvent();
 
+            player.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -89,7 +102,8 @@ namespace Pandemic
         protected void ProcessKeyboardEvent()
         {
             // Key events
-            Keys[] pressedKeys = Keyboard.GetState(PlayerIndex.One).GetPressedKeys();
+            Keys[] pressedKeys = Keyboard.GetState().GetPressedKeys();
+            LinkedList<keyboardEventListener> listeners;
 
             if (pressedKeys.Count() > 0)
             {
@@ -101,10 +115,12 @@ namespace Pandemic
                     }
                     else
                     {
-                        LinkedList<keyboardEventListener> listeners = keyboardEventListeners[key];
-                        foreach (keyboardEventListener listener in listeners)
+                        if (keyboardEventListeners.TryGetValue(key, out listeners))
                         {
-                            listener();
+                            foreach (keyboardEventListener listener in listeners)
+                            {
+                                listener();
+                            }
                         }
                     }
                 }
@@ -151,6 +167,8 @@ namespace Pandemic
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
+
+            player.Draw(spriteBatch);
             
             spriteBatch.End();
 

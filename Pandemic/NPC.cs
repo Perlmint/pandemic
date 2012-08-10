@@ -26,7 +26,7 @@ namespace Pandemic
 
         public void LoadContent(ContentManager Content, Dictionary<State, string> path)
         {
-            base.LoadContent(Content, path.Values.ToArray());
+            base.LoadContent(Content, path[State.alive]);
             dead = Content.Load<Texture2D>(path[State.dead]);
         }
 

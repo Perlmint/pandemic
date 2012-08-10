@@ -30,9 +30,9 @@ namespace Pandemic
         {
         }
 
-        public virtual void LoadContent(ContentManager Content, string[] path)
+        public virtual void LoadContent(ContentManager Content, string path)
         {
-            Content.Load<Texture2D>(path[0]);
+            tex = Content.Load<Texture2D>(path);
         }
 
         public virtual void Spawn(Vector2 pos)
