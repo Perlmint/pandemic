@@ -82,7 +82,6 @@ namespace Pandemic
         void MoveRight()
         {
             position.X += Speed;
-            ShowMessageBox(position.X.ToString());
         }
 
         public void Fire()
