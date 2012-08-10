@@ -144,6 +144,7 @@ namespace Pandemic
             {
                 listeners = new LinkedList<keyboardEventListener>();
                 listeners.AddLast(listener);
+                keyboardEventListeners.Add(key, listeners);
             }
         }
 
@@ -208,6 +209,7 @@ namespace Pandemic
                     case GameState.gameover:
                         break;
                 }
+
                 switch (newState)
                 {
                     case GameState.main:
