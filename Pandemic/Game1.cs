@@ -27,7 +27,9 @@ namespace Pandemic
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
             keyboardEventListeners = new Dictionary<Keys, LinkedList<keyboardEventListener>>();
+
             Content.RootDirectory = "Content";
         }
 
@@ -40,6 +42,7 @@ namespace Pandemic
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            keyboardEventListeners.Add(Keys.Escape, new LinkedList<keyboardEventListener>());
             keyboardEventListeners[Keys.Escape].AddLast(new keyboardEventListener(this.Exit));
             base.Initialize();
         }
@@ -114,7 +117,16 @@ namespace Pandemic
         /// <param name="listener">이벤트 리스너 딜리게이트</param>
         public void BindKeyboardEventListener(Keys key, keyboardEventListener listener)
         {
-            keyboardEventListeners[key].AddLast(listener);
+            LinkedList<keyboardEventListener> listeners;
+            if (keyboardEventListeners.TryGetValue(key, out listeners))
+            {
+                listeners.AddLast(listener);
+            }
+            else
+            {
+                listeners = new LinkedList<keyboardEventListener>();
+                listeners.AddLast(listener);
+            }
         }
 
         /// <summary>
