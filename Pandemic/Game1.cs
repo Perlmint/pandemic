@@ -28,13 +28,12 @@ namespace Pandemic
             play,
             gameover
         };
-        GameState state;
 
         static Action Curry<T>(Action<T> action, T parameter)
         {
             return () => action(parameter);
         }
-
+		Player player;
         public delegate void keyboardEventListener();
 
         public Game1()
@@ -59,6 +58,9 @@ namespace Pandemic
             state = GameState.main;
             setupMainState();
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
+            player = new Player();
+            player.Initialize(this);
+            player.Spawn(new Vector2(100, 100));
             base.Initialize();
         }
 
@@ -70,6 +72,12 @@ namespace Pandemic
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Dictionary<Player.State, string> pathDic = new Dictionary<Player.State,string>();
+            pathDic.Add(Player.State.alive, "player");
+            pathDic.Add(Player.State.dead, "player");
+
+            player.LoadContent(Content, pathDic);
 
             // TODO: use this.Content to load your game content here
         }
@@ -94,6 +102,8 @@ namespace Pandemic
 
             ProcessKeyboardEvent();
 
+            player.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -103,7 +113,8 @@ namespace Pandemic
         protected void ProcessKeyboardEvent()
         {
             // Key events
-            Keys[] pressedKeys = Keyboard.GetState(PlayerIndex.One).GetPressedKeys();
+            Keys[] pressedKeys = Keyboard.GetState().GetPressedKeys();
+            LinkedList<keyboardEventListener> listeners;
 
             if (pressedKeys.Count() > 0)
             {
@@ -184,7 +195,7 @@ namespace Pandemic
                     
                     break;
                 case GameState.play:
-
+					player.Draw(spriteBatch);
                     break;
                 case GameState.gameover:
 
