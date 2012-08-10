@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pandemic", "Pandemic\Pandemic.csproj", "{54191E8D-5439-4EB9-9F0A-6C8852562BF8}"
 EndProject
 Global

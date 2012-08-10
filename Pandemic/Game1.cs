@@ -29,11 +29,14 @@ namespace Pandemic
             gameover
         };
 
+        GameState state;
+        Player player;
+
         static Action Curry<T>(Action<T> action, T parameter)
         {
             return () => action(parameter);
         }
-		Player player;
+		
         public delegate void keyboardEventListener();
 
         public Game1()
@@ -114,7 +117,7 @@ namespace Pandemic
         {
             // Key events
             Keys[] pressedKeys = Keyboard.GetState().GetPressedKeys();
-            LinkedList<keyboardEventListener> listeners;
+
 
             if (pressedKeys.Count() > 0)
             {
