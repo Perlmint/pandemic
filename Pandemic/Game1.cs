@@ -21,6 +21,7 @@ namespace Pandemic
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
+        ScreenManager screenManager;
 
         public delegate void keyboardEventListener();
 
@@ -29,6 +30,7 @@ namespace Pandemic
             graphics = new GraphicsDeviceManager(this);
 
             keyboardEventListeners = new Dictionary<Keys, LinkedList<keyboardEventListener>>();
+            screenManager = new ScreenManager();
 
             Content.RootDirectory = "Content";
         }
@@ -42,8 +44,7 @@ namespace Pandemic
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            keyboardEventListeners.Add(Keys.Escape, new LinkedList<keyboardEventListener>());
-            keyboardEventListeners[Keys.Escape].AddLast(new keyboardEventListener(this.Exit));
+            BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             base.Initialize();
         }
 
@@ -148,6 +149,10 @@ namespace Pandemic
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            spriteBatch.Begin();
+            
+            spriteBatch.End();
 
             // TODO: Add your drawing code here
 
