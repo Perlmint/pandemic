@@ -20,11 +20,14 @@ namespace Pandemic
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Dictionary<Keys, LinkedList<Delegate>> keyboardEventListeners();
+        Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
+
+        public delegate void keyboardEventListener();
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            keyboardEventListeners = new Dictionary<Keys, LinkedList<keyboardEventListener>>();
             Content.RootDirectory = "Content";
         }
 
@@ -37,7 +40,7 @@ namespace Pandemic
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            keyboardEventListeners[Keys.Escape].AddLast(new keyboardEventListener(this.Exit));
             base.Initialize();
         }
 
@@ -82,9 +85,9 @@ namespace Pandemic
         protected void ProcessKeyboardEvent()
         {
             // Key events
-            Keys[] pressedKeys = Keyboard.GetState(PlayerIndex.One).GetPressedKeys;
+            Keys[] pressedKeys = Keyboard.GetState(PlayerIndex.One).GetPressedKeys();
 
-            if (pressedKeys.Count)
+            if (pressedKeys.Count() > 0)
             {
                 foreach (Keys key in pressedKeys)
                 {
@@ -94,10 +97,10 @@ namespace Pandemic
                     }
                     else
                     {
-                        List<Delegate> listeners = keyboardEventListeners[key];
-                        foreach (Delegate listener in listeners)
+                        LinkedList<keyboardEventListener> listeners = keyboardEventListeners[key];
+                        foreach (keyboardEventListener listener in listeners)
                         {
-                            listener.Method()();
+                            listener();
                         }
                     }
                 }
@@ -109,16 +112,20 @@ namespace Pandemic
         /// </summary>
         /// <param name="key">이벤트를 받을 키</param>
         /// <param name="listener">이벤트 리스너 딜리게이트</param>
-        public void BindKeyboardEventListener(Keys key, Delegate listener)
+        public void BindKeyboardEventListener(Keys key, keyboardEventListener listener)
         {
-            keyboardEventListeners[key].insert(listener);
+            keyboardEventListeners[key].AddLast(listener);
         }
 
-        public void UnbindKeyboardEventListener(Delegate listener)
+        /// <summary>
+        /// 키보드 리스너 제거
+        /// </summary>
+        /// <param name="listener">제거할 리스너 딜리게이트</param>
+        public void UnbindKeyboardEventListener(keyboardEventListener listener)
         {
-            foreach (List<Delegate> listeners in keyboardEventListeners)
+            foreach (KeyValuePair<Keys, LinkedList<keyboardEventListener>> listenerPair in keyboardEventListeners)
             {
-                listeners.Remove(listener);
+                listenerPair.Value.Remove(listener);
             }
         }
 
