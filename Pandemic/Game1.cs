@@ -20,6 +20,7 @@ namespace Pandemic
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Dictionary<Keys, LinkedList<Delegate>> keyboardEventListeners();
 
         public Game1()
         {
@@ -69,12 +70,56 @@ namespace Pandemic
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
 
-            // TODO: Add your update logic here
+            ProcessKeyboardEvent();
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// 키보드 이벤트 처리
+        /// </summary>
+        protected void ProcessKeyboardEvent()
+        {
+            // Key events
+            Keys[] pressedKeys = Keyboard.GetState(PlayerIndex.One).GetPressedKeys;
+
+            if (pressedKeys.Count)
+            {
+                foreach (Keys key in pressedKeys)
+                {
+                    if (key == Keys.Escape)
+                    {
+                        this.Exit();
+                    }
+                    else
+                    {
+                        List<Delegate> listeners = keyboardEventListeners[key];
+                        foreach (Delegate listener in listeners)
+                        {
+                            listener.Method()();
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 키보드 리스너 추가
+        /// </summary>
+        /// <param name="key">이벤트를 받을 키</param>
+        /// <param name="listener">이벤트 리스너 딜리게이트</param>
+        public void BindKeyboardEventListener(Keys key, Delegate listener)
+        {
+            keyboardEventListeners[key].insert(listener);
+        }
+
+        public void UnbindKeyboardEventListener(Delegate listener)
+        {
+            foreach (List<Delegate> listeners in keyboardEventListeners)
+            {
+                listeners.Remove(listener);
+            }
         }
 
         /// <summary>
