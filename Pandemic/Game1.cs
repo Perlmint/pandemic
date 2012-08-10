@@ -30,6 +30,11 @@ namespace Pandemic
         };
         GameState state;
 
+        static Action Curry<T>(Action<T> action, T parameter)
+        {
+            return () => action(parameter);
+        }
+
         public delegate void keyboardEventListener();
 
         public Game1()
@@ -52,6 +57,7 @@ namespace Pandemic
         {
             // TODO: Add your initialization logic here
             state = GameState.main;
+            setupMainState();
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             base.Initialize();
         }
@@ -110,11 +116,12 @@ namespace Pandemic
                     else
                     {
                         LinkedList<keyboardEventListener> listeners;
-                        keyboardEventListeners.TryGetValue(key, out listeners);
-
-                        foreach (keyboardEventListener listener in listeners)
+                        if (keyboardEventListeners.TryGetValue(key, out listeners))
                         {
-                            listener();
+                            foreach (keyboardEventListener listener in listeners)
+                            {
+                                listener();
+                            }
                         }
                     }
                 }
@@ -152,6 +159,15 @@ namespace Pandemic
             }
         }
 
+        public void UnbindKeyboardEvent(Keys key)
+        {
+            LinkedList<keyboardEventListener> listeners;
+            if (keyboardEventListeners.TryGetValue(key, out listeners))
+            {
+                keyboardEventListeners.Remove(key);
+            }
+        }
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -161,7 +177,7 @@ namespace Pandemic
             GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
-            switch (newState)
+            switch (state)
             {
                 case GameState.main:
                     
@@ -182,14 +198,26 @@ namespace Pandemic
         {
             if (state != newState)
             {
+                switch (state)
+                {
+                    case GameState.main:
+                        teardownMainState();
+                        break;
+                    case GameState.play:
+                        break;
+                    case GameState.gameover:
+                        break;
+                }
                 switch (newState)
                 {
                     case GameState.main:
                         setupMainState();
                         break;
                     case GameState.play:
+                        setupPlayState();
                         break;
                     case GameState.gameover:
+                        setupGameoverState();
                         break;
                 }
                 state = newState;
@@ -198,7 +226,21 @@ namespace Pandemic
 
         protected void setupMainState()
         {
+            BindKeyboardEventListener(Keys.Enter, new keyboardEventListener(Curry(changeState, GameState.play)));
+        }
 
+        protected void teardownMainState()
+        {
+            UnbindKeyboardEvent(Keys.Enter);
+        }
+
+        protected void setupPlayState()
+        {
+            
+        }
+
+        protected void setupGameoverState()
+        {
         }
     }
 }
