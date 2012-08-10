@@ -1,0 +1,6 @@
+C:\Users\2012PJY\Desktop\Pandemic\Pandemic\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\2012PJY\Desktop\Pandemic\Pandemic\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\2012PJY\Desktop\Pandemic\Pandemic\bin\x86\Debug\Pandemic.exe
+C:\Users\2012PJY\Desktop\Pandemic\Pandemic\bin\x86\Debug\Pandemic.pdb
+C:\Users\2012PJY\Desktop\Pandemic\Pandemic\obj\x86\Debug\Pandemic.exe
+C:\Users\2012PJY\Desktop\Pandemic\Pandemic\obj\x86\Debug\Pandemic.pdb
