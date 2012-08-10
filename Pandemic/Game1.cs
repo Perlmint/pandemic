@@ -22,6 +22,13 @@ namespace Pandemic
         SpriteBatch spriteBatch;
         Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         ScreenManager screenManager;
+        enum GameState
+        {
+            main,
+            play,
+            gameover
+        };
+        GameState state;
 
         public delegate void keyboardEventListener();
 
@@ -44,6 +51,7 @@ namespace Pandemic
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            state = GameState.main;
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             base.Initialize();
         }
@@ -101,7 +109,9 @@ namespace Pandemic
                     }
                     else
                     {
-                        LinkedList<keyboardEventListener> listeners = keyboardEventListeners[key];
+                        LinkedList<keyboardEventListener> listeners;
+                        keyboardEventListeners.TryGetValue(key, out listeners);
+
                         foreach (keyboardEventListener listener in listeners)
                         {
                             listener();
@@ -148,15 +158,47 @@ namespace Pandemic
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
-            
+            switch (newState)
+            {
+                case GameState.main:
+                    
+                    break;
+                case GameState.play:
+
+                    break;
+                case GameState.gameover:
+
+                    break;
+            }
             spriteBatch.End();
 
-            // TODO: Add your drawing code here
-
             base.Draw(gameTime);
+        }
+
+        void changeState(GameState newState)
+        {
+            if (state != newState)
+            {
+                switch (newState)
+                {
+                    case GameState.main:
+                        setupMainState();
+                        break;
+                    case GameState.play:
+                        break;
+                    case GameState.gameover:
+                        break;
+                }
+                state = newState;
+            }
+        }
+
+        protected void setupMainState()
+        {
+
         }
     }
 }
