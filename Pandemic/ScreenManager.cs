@@ -36,7 +36,7 @@ namespace Pandemic
             foreach (GameObject drawableObject in drawableObjects)
             {
                 //Vector2 screenCoord;
-                drawableObject.Draw(spriteBatch);
+                drawableObject.Draw(spriteBatch, this);
             }
         }
 
