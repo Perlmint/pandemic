@@ -10,6 +10,7 @@ namespace Pandemic
     class ScreenManager
     {
         Vector2 screenCenter;
+        int width, height;
         float scale;
 
         public ScreenManager()
@@ -37,6 +38,19 @@ namespace Pandemic
                 //Vector2 screenCoord;
                 drawableObject.Draw(spriteBatch);
             }
+        }
+
+        public void setSizeFromStage(Stage stage)
+        {
+            this.width = stage.ScreenWidth;
+            this.height = stage.ScreenHeight;
+        }
+
+        public void applySizeToGraphicsMgr(GraphicsDeviceManager graphics)
+        {
+            graphics.PreferredBackBufferWidth = width;
+            graphics.PreferredBackBufferHeight = height;
+            graphics.ApplyChanges();
         }
     }
 }
