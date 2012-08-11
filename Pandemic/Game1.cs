@@ -30,6 +30,7 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         Stage stage;
         Map map;
         MainMenu mainMenu;
+        Song bgm;
 
         float elapsedTime;
 
@@ -97,6 +98,11 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
             player.LoadContent(Content);
             mainMenu.LoadContent(Content);
+            bgm = Content.Load<Song>(Constants.MusicFolder + "\\" + Constants.BackgroundMusic);
+            
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(bgm);
+            MediaPlayer.Pause();
 
             // TODO: use this.Content to load your game content here
         }
@@ -134,6 +140,7 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
                     player.Update(elapsedTime);
 
                     npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
+                    player.NPCCollision(npcManager.GetNPCRectList());
 
                     break;
                 case GameState.gameover:
@@ -303,7 +310,7 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         protected void setupMainState()
         {
             mainMenu.Initialize();
-            mainMenu.Setup();
+            MediaPlayer.Resume();
         }
 
         protected void teardownMainState()
@@ -322,16 +329,21 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
         protected void teardownPlayState()
         {
-            
+            this.UnbindKeyboardEvent(Keys.Up);
+            this.UnbindKeyboardEvent(Keys.Down);
+            this.UnbindKeyboardEvent(Keys.Right);
+            this.UnbindKeyboardEvent(Keys.Left);
+            this.UnbindKeyboardEvent(Keys.Space);
         }
 
         protected void setupGameoverState()
         {
+            this.BindKeyboardEventListener(Keys.Enter,new keyboardEventListener(Curry(changeState, GameState.main)));
         }
 
         protected void teardownGameoverState()
         {
-            
+            this.UnbindKeyboardEvent(Keys.Enter);
         }
     }
 }

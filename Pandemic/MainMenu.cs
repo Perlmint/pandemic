@@ -25,7 +25,6 @@ namespace Pandemic
         Texture2D exitButtonSelected;
         Texture2D background;
 
-        Song bgm;
         float selectTimer;
         const float SelectTimeOut = 0.2f;
 
@@ -63,14 +62,6 @@ namespace Pandemic
             helpButtonSelected = Content.Load<Texture2D>(Constants.MenuFolder + "\\" + Constants.HelpButton + "Selected");
             startButtonSelected = Content.Load<Texture2D>(Constants.MenuFolder + "\\" + Constants.StartButton + "Selected");
             exitButtonSelected = Content.Load<Texture2D>(Constants.MenuFolder + "\\" + Constants.ExitButton + "Selected");
-            bgm = Content.Load<Song>(Constants.MusicFolder + "\\" + Constants.BackgroundMusic);
-        }
-
-        public void Setup()
-        {
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(bgm);
-
         }
 
         public void Update(float elapsedGameTime)

@@ -17,14 +17,15 @@ namespace Pandemic
     {
         public enum State
         {
-            alive, almost_dead, dead
+            alive, almost_dead, dead, absolute
         };
         const float Speed = 3.0f;
-        const int MaxHP = 100;
+        const int MaxHP = 5;
         const int MaxBullet = 50;
         const int RectSize = 30;
         static Texture2D dead;
         static Texture2D tex;
+        static Texture2D heart;
 
         float atkCooldown;
 
@@ -34,6 +35,8 @@ namespace Pandemic
         State state;
 
         float corpseTimer;
+        float absoluteTimer;
+        const float absoluteTimeOut = 2.0f;
         const float corpseTimeOut = 5.0f;
 
         public Player()
@@ -58,6 +61,7 @@ namespace Pandemic
         {
             tex = Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["basic"].DefaultTexture);
             dead = Content.Load<Texture2D>(Stage.stageInstance.Units.Player_Death);
+            heart = Content.Load<Texture2D>("heart");
             weapon.LoadContent(Content);
         }
 
@@ -102,11 +106,6 @@ namespace Pandemic
                         corpseTimer = 0;
                     }
 
-                    rect.X = (int)position.X;
-                    rect.Y = (int)position.Y;
-                    rect.Width = RectSize;
-                    rect.Height = RectSize;
-
                     break;
                 case State.almost_dead:
                     break;
@@ -117,6 +116,35 @@ namespace Pandemic
                         isAlive = false;
                     }
                     break;
+                case State.absolute:
+                    absoluteTimer += elapsedGameTime;
+                    if (absoluteTimer >= absoluteTimeOut)
+                    {
+                        state = State.alive;
+                    }
+                    break;
+            }
+
+            rect.X = (int)position.X;
+            rect.Y = (int)position.Y;
+            rect.Width = RectSize;
+            rect.Height = RectSize;
+        }
+
+       public void NPCCollision(List<Rectangle> rectList)
+        {
+            if (state != State.absolute)
+            {
+                foreach (Rectangle rect in rectList)
+                {
+                    if (this.Intersects(rect))
+                    {
+                        this.AccHP(-1);
+                        state = State.absolute;
+                        absoluteTimer = 0;
+                        break;
+                    }
+                }
             }
         }
 
@@ -185,11 +213,19 @@ namespace Pandemic
                         break;
                     case State.almost_dead:
                         break;
+                    case State.absolute:
+                        spriteBatch.Draw(tex, rect, new Color(1.0f, 1.0f, 1.0f, 0.5f));
+                        break;
                 }
             }
 
             foreach (Bullet bullet in bullets)
                 bullet.Draw(spriteBatch);
+
+            for (int i = 0; i < hp; i++)
+            {
+                spriteBatch.Draw(heart, new Rectangle(20 * i, 0, 20, 20), Color.White);
+            }
         }
     }
 }
