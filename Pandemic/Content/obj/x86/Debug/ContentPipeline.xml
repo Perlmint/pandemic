@@ -8,7 +8,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\player.xnb</Output>
-      <Time>2012-08-11T15:50:39.8485805+09:00</Time>
+      <Time>2012-08-11T17:59:26.9575459+09:00</Time>
     </Item>
     <Item>
       <Source>bullet.png</Source>
@@ -17,7 +17,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\bullet.xnb</Output>
-      <Time>2012-08-11T12:26:51.3801522+09:00</Time>
+      <Time>2012-08-11T17:59:26.9465453+09:00</Time>
     </Item>
     <Item>
       <Source>effect.png</Source>
@@ -26,7 +26,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\effect.xnb</Output>
-      <Time>2012-08-11T12:26:51.3861525+09:00</Time>
+      <Time>2012-08-11T17:59:26.9495454+09:00</Time>
     </Item>
     <Item>
       <Source>player_death.png</Source>
@@ -35,7 +35,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\player_death.xnb</Output>
-      <Time>2012-08-11T15:50:39.8505807+09:00</Time>
+      <Time>2012-08-11T17:59:26.9585459+09:00</Time>
     </Item>
     <Item>
       <Source>enemy.png</Source>
@@ -44,7 +44,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\enemy.xnb</Output>
-      <Time>2012-08-11T15:50:39.8465804+09:00</Time>
+      <Time>2012-08-11T17:59:26.9515455+09:00</Time>
     </Item>
     <Item>
       <Source>normal.png</Source>
@@ -53,7 +53,16 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\normal.xnb</Output>
-      <Time>2012-08-11T15:50:39.8475805+09:00</Time>
+      <Time>2012-08-11T17:59:26.9545457+09:00</Time>
+    </Item>
+    <Item>
+      <Source>blood.png</Source>
+      <Name>blood</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\blood.xnb</Output>
+      <Time>2012-08-11T17:59:26.9445451+09:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

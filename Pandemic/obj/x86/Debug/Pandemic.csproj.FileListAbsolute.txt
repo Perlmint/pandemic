@@ -10,3 +10,4 @@ C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\D
 C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\player_death.xnb
 C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\enemy.xnb
 C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\normal.xnb
+C:\Users\Eon\Development\visual studio 2010\Projects\Pandemic\Pandemic\bin\x86\Debug\Content\blood.xnb

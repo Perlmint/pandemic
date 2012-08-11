@@ -19,5 +19,13 @@ namespace Pandemic
         public override void Update(float elapsedGameTime)
         {
         }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+        }
+
+        public override void LoadContent(ContentManager Content)
+        {
+        }
     }
 }
