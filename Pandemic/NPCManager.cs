@@ -80,6 +80,18 @@ namespace Pandemic
             }
         }
 
+        public List<Rectangle> GetNPCRectList()
+        {
+            List<Rectangle> rectList = new List<Rectangle>();
+
+            foreach (NPC npc in NPCList)
+            {
+                rectList.Add(npc.GetRectangle());
+            }
+
+            return rectList;
+        }
+
         private static NPCManager sharedManager = new NPCManager();
         public static NPCManager SharedManager
         {
