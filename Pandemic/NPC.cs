@@ -169,7 +169,8 @@ namespace Pandemic
                             ret = tex;
                             break;
                         case State.dead:
-                            ret = dead;
+                            //ret = dead;
+                            ret = null;
                             break;
                     }
                 }
