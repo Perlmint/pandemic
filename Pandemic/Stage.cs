@@ -66,7 +66,7 @@ namespace Pandemic
         public Dictionary<int /*appear_uptime_in_map*/, int /*num_of_enemies*/> NPCsAppearSpec;
         public Dictionary<int /*appear_uptime_in_map*/, string /*name_of_weapon*/> WeaponsAppearSpec;
 
-        public static const Stage stageInstance = new Stage()
+        public static Stage stageInstance = new Stage()
         {
             MapWidth = 2400,
             MapHeight = 1800,
