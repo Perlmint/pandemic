@@ -22,7 +22,7 @@ namespace Pandemic
         SpriteBatch spriteBatch;
         Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         ScreenManager screenManager;
-        NPC npc;
+        NPCManager npcManager;
 
         float elapsedTime;
 
@@ -49,6 +49,7 @@ namespace Pandemic
 
             keyboardEventListeners = new Dictionary<Keys, LinkedList<keyboardEventListener>>();
             screenManager = new ScreenManager();
+            npcManager = NPCManager.SharedManager;
 
             Content.RootDirectory = "Content";
         }
@@ -68,9 +69,6 @@ namespace Pandemic
             player = new Player();
             player.Initialize(this);
             player.Spawn(new Vector2(100, 100));
-            npc = new NPC();
-            npc.Initialize();
-            npc.Spawn(new Vector2(200, 200));
             base.Initialize();
         }
 
@@ -87,12 +85,7 @@ namespace Pandemic
             pathDic.Add(Player.State.alive, "player");
             pathDic.Add(Player.State.dead, "player");
 
-            Dictionary<NPC.State, string> pathDicNPC = new Dictionary<NPC.State, string>();
-            pathDicNPC.Add(NPC.State.alive, "player");
-            pathDicNPC.Add(NPC.State.dead, "player");
-
             player.LoadContent(Content, pathDic);
-            npc.LoadContent(Content, pathDicNPC);
 
             // TODO: use this.Content to load your game content here
         }
@@ -120,10 +113,7 @@ namespace Pandemic
             elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             player.Update(elapsedTime);
-
-            npc.SetDestination(player.GetPosition());
-            npc.Update(elapsedTime);
-            npc.CheckBulletCollision(player.GetBulletArray());
+            npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
 
             base.Update(gameTime);
         }
@@ -217,7 +207,7 @@ namespace Pandemic
                     break;
                 case GameState.play:
 					player.Draw(spriteBatch);
-                    npc.Draw(spriteBatch);
+                    npcManager.Draw(spriteBatch);
                     break;
                 case GameState.gameover:
 
@@ -238,8 +228,10 @@ namespace Pandemic
                         teardownMainState();
                         break;
                     case GameState.play:
+                        teardownPlayState();
                         break;
                     case GameState.gameover:
+                        teardownGameoverState();
                         break;
                 }
 
@@ -271,11 +263,21 @@ namespace Pandemic
 
         protected void setupPlayState()
         {
-            
+            npcManager.Initialize();
+        }
+
+        protected void teardownPlayState()
+        {
+           
         }
 
         protected void setupGameoverState()
         {
+        }
+
+        protected void teardownGameoverState()
+        {
+            
         }
     }
 }
