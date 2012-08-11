@@ -239,8 +239,9 @@ namespace Pandemic
             tex = texRight[weaponName];
         }
 
-        void updateScreenPosition()
+        void updatePosition()
         {
+
         }
 
         void ChangeDirection(Direction newDirection)
