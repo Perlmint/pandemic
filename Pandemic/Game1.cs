@@ -23,6 +23,7 @@ namespace Pandemic
         Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         ScreenManager screenManager;
         NPC npc;
+        Stage stage;
 
         float elapsedTime;
 
@@ -64,6 +65,10 @@ namespace Pandemic
             // TODO: Add your initialization logic here
             state = GameState.main;
             setupMainState();
+            stage = Stage.stageInstance;
+            graphics.PreferredBackBufferWidth = stage.ScreenWidth;
+            graphics.PreferredBackBufferHeight = stage.ScreenHeight;
+            graphics.ApplyChanges();
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             player = new Player();
             player.Initialize(this);
