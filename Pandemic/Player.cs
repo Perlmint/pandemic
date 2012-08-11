@@ -45,8 +45,9 @@ namespace Pandemic
         float absoluteTimer;
         const float absoluteTimeOut = 2.0f;
         const float corpseTimeOut = 5.0f;
+        Game1 game;
 
-        public Player()
+        public Player(Game1 paramGame)
         {
             int i;
             int[,] area = {
@@ -54,6 +55,7 @@ namespace Pandemic
                               {1,2,1},
                               {1,1,1}
                           };
+            game = paramGame;
             weapon = new Weapon(100, area, 0.5f, 100);
 
             bullets = new Bullet[MaxBullet];
@@ -110,12 +112,11 @@ namespace Pandemic
 
                     if (atkCooldown > 0)
                         atkCooldown -= elapsedGameTime;
-                    if (hp <= 0)
-                    {
-                        state = State.dead;
-                        corpseTimer = 0;
-                    }
-
+                    
+                    rect.X = (int)position.X;
+                    rect.Y = (int)position.Y;
+                    rect.Width = RectSize;
+                    rect.Height = RectSize;
                     break;
                 case State.almost_dead:
                     break;
@@ -132,26 +133,37 @@ namespace Pandemic
                     {
                         state = State.alive;
                     }
+
+                    rect.X = (int)position.X;
+                    rect.Y = (int)position.Y;
+                    rect.Width = RectSize;
+                    rect.Height = RectSize;
                     break;
             }
 
-            rect.X = (int)position.X;
-            rect.Y = (int)position.Y;
-            rect.Width = RectSize;
-            rect.Height = RectSize;
+            if (!isAlive)
+                game.GameOver();
         }
 
        public void NPCCollision(List<Rectangle> rectList)
         {
-            if (state != State.absolute)
+            if (state != State.absolute && state != State.dead)
             {
                 foreach (Rectangle rect in rectList)
                 {
                     if (this.Intersects(rect))
                     {
                         this.AccHP(-1);
-                        state = State.absolute;
-                        absoluteTimer = 0;
+                        if (hp > 0)
+                        {
+                            state = State.absolute;
+                            absoluteTimer = 0;
+                        }
+                        else
+                        {
+                            state = State.dead;
+                            corpseTimer = 0;
+                        }
                         break;
                     }
                 }

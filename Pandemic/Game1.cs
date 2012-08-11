@@ -76,7 +76,7 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             screenManager.setSizeFromStage(stage);
             screenManager.applySizeToGraphicsMgr(graphics);
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
-            player = new Player();
+            player = new Player(this);
 
             mainMenu = new MainMenu(this);
             //mainMenu.Initialize();
@@ -256,6 +256,11 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         {
             
             changeState(GameState.play);
+        }
+
+        public void GameOver()
+        {
+            changeState(GameState.gameover);
         }
 
         void changeState(GameState newState)
