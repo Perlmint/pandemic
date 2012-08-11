@@ -74,7 +74,7 @@ namespace Pandemic
             game.BindKeyboardEventListener(Keys.Down, this.MoveDown);
             game.BindKeyboardEventListener(Keys.Right, this.MoveRight);
             game.BindKeyboardEventListener(Keys.Left, this.MoveLeft);
-            game.BindKeyboardEventListener(Keys.A, this.Fire);
+            game.BindKeyboardEventListener(Keys.Space, this.Fire);
         }
 
         public override void Spawn(Vector2 pos)

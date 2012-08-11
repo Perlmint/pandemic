@@ -29,11 +29,13 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 		NPCManager npcManager;
         Stage stage;
         Map map;
+        MainMenu mainMenu;
 
         float elapsedTime;
 
         enum GameState
         {
+            opening,
             main,
             play,
             gameover
@@ -68,13 +70,15 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             // TODO: Add your initialization logic here
             stage = Stage.stageInstance;
             map = Map.createFromStage(stage);
-            state = GameState.main;
-            setupMainState();
+            state = GameState.opening;
+            setupOpeningState();
             screenManager.setSizeFromStage(stage);
             screenManager.applySizeToGraphicsMgr(graphics);
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             player = new Player();
-            player.Initialize(this);
+
+            mainMenu = new MainMenu(this);
+            //mainMenu.Initialize();
             
             base.Initialize();
         }
@@ -88,19 +92,11 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Dictionary<Player.State, string> pathDic = new Dictionary<Player.State,string>();
-            pathDic.Add(Player.State.alive, "player");
-            pathDic.Add(Player.State.dead, "player");
+            NPC npc = new NPC();
+            npc.LoadContent(Content);
 
             player.LoadContent(Content);
-
-            Dictionary<NPC.State, string> pathDicNPC = new Dictionary<NPC.State, string>();
-            pathDicNPC.Add(NPC.State.alive, "player");
-            pathDicNPC.Add(NPC.State.dead, "player");
-
-            NPC npc = new NPC();
-
-            npc.LoadContent(Content);
+            mainMenu.LoadContent(Content);
 
             // TODO: use this.Content to load your game content here
         }
@@ -129,7 +125,10 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
             switch (state)
             {
+                case GameState.opening:
+                    break;
                 case GameState.main:
+                    mainMenu.Update(elapsedTime);
                     break;
                 case GameState.play:
                     player.Update(elapsedTime);
@@ -228,8 +227,10 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             spriteBatch.Begin();
             switch (state)
             {
+                case GameState.opening:
+                    break;
                 case GameState.main:
-                    
+                    mainMenu.Draw(spriteBatch);
                     break;
                 case GameState.play:
 					player.Draw(spriteBatch);
@@ -244,12 +245,21 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             base.Draw(gameTime);
         }
 
+        public void Play()
+        {
+            
+            changeState(GameState.play);
+        }
+
         void changeState(GameState newState)
         {
             if (state != newState)
             {
                 switch (state)
                 {
+                    case GameState.opening:
+                        teardownOpeningState();
+                        break;
                     case GameState.main:
                         teardownMainState();
                         break;
@@ -263,6 +273,9 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
                 switch (newState)
                 {
+                    case GameState.opening:
+                        setupOpeningState();
+                        break;
                     case GameState.main:
                         setupMainState();
                         break;
@@ -277,20 +290,32 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             }
         }
 
+        protected void setupOpeningState()
+        {
+            BindKeyboardEventListener(Keys.Enter, new keyboardEventListener(Curry(changeState, GameState.main)));
+        }
+
+        protected void teardownOpeningState()
+        {
+            UnbindKeyboardEvent(Keys.Enter);
+        }
+
         protected void setupMainState()
         {
-            BindKeyboardEventListener(Keys.Enter, new keyboardEventListener(Curry(changeState, GameState.play)));
+            mainMenu.Initialize();
+            mainMenu.Setup();
         }
 
         protected void teardownMainState()
         {
-            UnbindKeyboardEvent(Keys.Enter);
+            
         }
 
         protected void setupPlayState()
         {
             npcManager.Initialize();
-            player.Spawn(new Vector2(100, 100));
+            player.Initialize(this);
+            player.Spawn(Stage.stageInstance.PlayerInitialPosition);
         }
 
         protected void teardownPlayState()
