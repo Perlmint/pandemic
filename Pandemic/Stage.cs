@@ -97,7 +97,7 @@ namespace Pandemic
             ScreenHeight = 600,
             TileWidth = 50,
             TileHeight = 50,
-            PlayerInitialPosition = new Vector2(30, 20),
+            PlayerInitialPosition = new Vector2(0, 0),
             weapons = new string[] { "basic", "advanced", "extreme" },
             obstacles = new string[] { "house1", "house2", "house3", "house4", "tree1", "tree2", "stone" },
             Units = new UnitTextures()

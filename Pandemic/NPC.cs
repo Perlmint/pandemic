@@ -76,11 +76,13 @@ namespace Pandemic
                                 corpseTimer = 0;
                                 state = State.dead;
                             }
-
-                            rect.X = (int)position.X;
-                            rect.Y = (int)position.Y;
-                            rect.Width = RectSize;
-                            rect.Height = RectSize;
+                            SetRectangle(new Rectangle()
+                            {
+                                X = (int)position.X,
+                                Y = (int)position.Y,
+                                Width = RectSize,
+                                Height = RectSize
+                            });
                         }
                         break;
                     case State.almost_dead:
@@ -107,10 +109,13 @@ namespace Pandemic
 
                             position += Vector2.Normalize(temp) * Speed;
 
-                            rect.X = (int)position.X;
-                            rect.Y = (int)position.Y;
-                            rect.Width = RectSize;
-                            rect.Height = RectSize;
+                            SetRectangle(new Rectangle()
+                            {
+                                X = (int)position.X,
+                                Y = (int)position.Y,
+                                Width = RectSize,
+                                Height = RectSize
+                            });
                         }
                         break;
                 }
@@ -147,7 +152,7 @@ namespace Pandemic
 
                     foreach (Rectangle rectangle in hashSet)
                     {
-                        if (rect.Intersects(rectangle))
+                        if (GetRectangle().Intersects(rectangle))
                         {
                             this.AccHP(-bullet.GetDamageValue());
                             if (this.hp > 0)
@@ -199,12 +204,12 @@ namespace Pandemic
                     case State.alive:
                     case State.absolute:
                         //base.Draw(spriteBatch);
-                        spriteBatch.Draw(tex, rect, Color.White);
+                        spriteBatch.Draw(tex, screen.translateWorldToScreen(GetRectangle()), Color.White);
                         break;
                     case State.almost_dead:
                         break;
                     case State.dead:
-                        spriteBatch.Draw(dead, rect, Color.White);
+                        spriteBatch.Draw(dead, screen.translateWorldToScreen(GetRectangle()), Color.White);
                         break;
                 }
             }

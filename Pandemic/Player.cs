@@ -52,6 +52,8 @@ namespace Pandemic
         const float corpseTimeOut = 5.0f;
         Game1 game;
 
+        ScreenManager screenManager;
+
         public Player(Game1 paramGame)
         {
             int i;
@@ -110,6 +112,11 @@ namespace Pandemic
             return bullets;
         }
 
+        public void updateScreenManager(ScreenManager screenManager)
+        {
+            this.screenManager = screenManager;
+        }
+
         public void Initialize(Game1 game)
         {
             base.Initialize();
@@ -139,11 +146,13 @@ namespace Pandemic
             switch (state)
             {
                 case State.alive:
-                    
-                    rect.X = (int)position.X;
-                    rect.Y = (int)position.Y;
-                    rect.Width = RectSize;
-                    rect.Height = RectSize;
+                    SetRectangle(new Rectangle()
+                    {
+                        X = (int)position.X,
+                        Y = (int)position.Y,
+                        Width = RectSize,
+                        Height = RectSize
+                    });
                     break;
                 case State.almost_dead:
                     break;
@@ -160,11 +169,13 @@ namespace Pandemic
                     {
                         state = State.alive;
                     }
-
-                    rect.X = (int)position.X;
-                    rect.Y = (int)position.Y;
-                    rect.Width = RectSize;
-                    rect.Height = RectSize;
+                    SetRectangle(new Rectangle()
+                    {
+                        X = (int)position.X,
+                        Y = (int)position.Y,
+                        Width = RectSize,
+                        Height = RectSize
+                    });
                     break;
             }
 
@@ -229,6 +240,11 @@ namespace Pandemic
             position.X += Speed;
             ChangeDirection(Direction.right);
             tex = texRight[weaponName];
+        }
+
+        void updateScreenPosition()
+        {
+
         }
 
         void ChangeDirection(Direction newDirection)
@@ -328,15 +344,15 @@ namespace Pandemic
                 {
                     case State.alive:
                         //base.Draw(spriteBatch);
-                        spriteBatch.Draw(tex, rect, Color.White);
+                        spriteBatch.Draw(tex, screen.translateWorldToScreen(GetRectangle()), Color.White);
                         break;
                     case State.dead:
-                        spriteBatch.Draw(dead, rect, Color.White);
+                        spriteBatch.Draw(dead, screen.translateWorldToScreen(GetRectangle()), Color.White);
                         break;
                     case State.almost_dead:
                         break;
                     case State.absolute:
-                        spriteBatch.Draw(tex, rect, new Color(1.0f, 1.0f, 1.0f, 0.5f));
+                        spriteBatch.Draw(tex, screen.translateWorldToScreen(GetRectangle()), new Color(1.0f, 1.0f, 1.0f, 0.5f));
                         break;
                 }
             }
