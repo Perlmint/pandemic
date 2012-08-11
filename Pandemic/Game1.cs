@@ -20,10 +20,15 @@ namespace Pandemic
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
+        
+Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
+
         ScreenManager screenManager;
+        GameState state;
+        Player player;
         NPC npc;
         Stage stage;
+        Map map;
 
         float elapsedTime;
 
@@ -33,9 +38,6 @@ namespace Pandemic
             play,
             gameover
         };
-
-        GameState state;
-        Player player;
 
         static Action Curry<T>(Action<T> action, T parameter)
         {
@@ -63,12 +65,12 @@ namespace Pandemic
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            stage = Stage.stageInstance;
+            map = Map.createFromStage(stage);
             state = GameState.main;
             setupMainState();
-            stage = Stage.stageInstance;
-            graphics.PreferredBackBufferWidth = stage.ScreenWidth;
-            graphics.PreferredBackBufferHeight = stage.ScreenHeight;
-            graphics.ApplyChanges();
+            screenManager.setSizeFromStage(stage);
+            screenManager.applySizeToGraphicsMgr(graphics);
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             player = new Player();
             player.Initialize(this);

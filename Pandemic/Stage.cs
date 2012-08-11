@@ -53,7 +53,7 @@ namespace Pandemic
         public Dictionary<string, RedirectiveTextures> Bullet;
         public Dictionary<string, HashSet<string>> Effect;
         public List<string> Ground;
-        public List<string> Obstacle;
+        public Dictionary<string, string> Obstacle;
     };
     class Stage
     {
@@ -61,10 +61,12 @@ namespace Pandemic
         public int ScreenWidth, ScreenHeight;
         public Vector2 PlayerInitialPosition;
         public string[] weapons;
+        public string[] obstacles;
         public UnitTextures Units;
         public NonUnitTextures NonUnits;
         public Dictionary<int /*appear_uptime_in_map*/, int /*num_of_enemies*/> NPCsAppearSpec;
         public Dictionary<int /*appear_uptime_in_map*/, string /*name_of_weapon*/> WeaponsAppearSpec;
+        public Dictionary<Vector2 /*position_in_map*/, string /*name_of_obstacle*/> ObstaclesArrangeSpec;
 
         public static Stage stageInstance = new Stage()
         {
@@ -73,7 +75,8 @@ namespace Pandemic
             ScreenWidth = 800,
             ScreenHeight = 600,
             PlayerInitialPosition = new Vector2(30, 20),
-            weapons = new string[] {"basic", "advanced", "extreme"},
+            weapons = new string[] { "basic", "advanced", "extreme" },
+            obstacles = new string[] { "house1", "house2", "house3", "house4", "tree1", "tree2", "stone" },
             Units = new UnitTextures()
             {
                 PlayerArmed = new Dictionary<string, RedirectiveTextures>() {
@@ -107,6 +110,9 @@ namespace Pandemic
                 {0, "basic"},
                 {10, "advanced"},
                 {30, "extreme"}
+            },
+            ObstaclesArrangeSpec = new Dictionary<Vector2, string>()
+            {
             }
         };
     }
