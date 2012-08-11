@@ -19,6 +19,12 @@ namespace Pandemic
         {
             alive, almost_dead, dead
         };
+
+        public enum Direction
+        {
+            left, right, up, down
+        };
+
         const float Speed = 3.0f;
         const int MaxHP = 100;
         const int MaxBullet = 50;
@@ -32,6 +38,7 @@ namespace Pandemic
         Bullet[] bullets;
 
         State state;
+        Direction direction;
 
         float corpseTimer;
         const float corpseTimeOut = 5.0f;
@@ -74,7 +81,10 @@ namespace Pandemic
             game.BindKeyboardEventListener(Keys.Down, this.MoveDown);
             game.BindKeyboardEventListener(Keys.Right, this.MoveRight);
             game.BindKeyboardEventListener(Keys.Left, this.MoveLeft);
+
             game.BindKeyboardEventListener(Keys.Space, this.Fire);
+
+            direction = Direction.right;
         }
 
         public override void Spawn(Vector2 pos)
@@ -123,21 +133,34 @@ namespace Pandemic
         void MoveUp()
         {
             position.Y -= Speed;
+            ChangeDirection(Direction.up);
         }
 
         void MoveDown()
         {
             position.Y += Speed;
+            ChangeDirection(Direction.down);
         }
 
         void MoveLeft()
         {
             position.X -= Speed;
+            ChangeDirection(Direction.left);
         }
 
         void MoveRight()
         {
             position.X += Speed;
+            ChangeDirection(Direction.right);
+        }
+
+        void ChangeDirection(Direction newDirection)
+        {
+            if (direction != newDirection)
+            {
+                // TODO: change Sprite Image
+                direction = newDirection;
+            }
         }
 
         void Fire()
@@ -151,8 +174,27 @@ namespace Pandemic
 
                 if (i < MaxBullet)
                 {
+                    Vector2 bulletDirection;
+                    switch (direction)
+                    {
+                        case Direction.up:
+                            bulletDirection = new Vector2(0, weapon.GetRange());
+                            break;
+                        case Direction.down:
+                            bulletDirection = new Vector2(0, -weapon.GetRange());
+                            break;
+                        case Direction.left:
+                            bulletDirection = new Vector2(weapon.GetRange(), 0);
+                            break;
+                        case Direction.right:
+                            bulletDirection = new Vector2(-weapon.GetRange(),0);
+                            break;
+                        default:
+                            bulletDirection = new Vector2();
+                            break;
+                    }
                     bullets[i].Spawn(position);
-                    bullets[i].SetDestination(position + new Vector2(weapon.GetRange(), 0));
+                    bullets[i].SetDestination(position + bulletDirection);
                     atkCooldown = weapon.GetCooldown();
                 }
             }
