@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace Pandemic
 {
-    class Weapon
+    class Weapon : GameObject
     {
         int range;
         int[,] atkAreaUp;
@@ -27,6 +27,8 @@ namespace Pandemic
         Texture2D bulletTex;
         Texture2D effectTex;
         Texture2D tileTex;
+
+        const int RectSize = 30;
 
         int damage;
         float effectTimeOut;
@@ -47,17 +49,30 @@ namespace Pandemic
             damage = Stage.stageInstance.WeaponSpec[name].damage;
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
         }
 
-        public void Spawn(Vector2 pos)
+        public override void Spawn(Vector2 pos)
         {
+            base.Spawn(pos);
             position = pos;
             alive = true;
         }
 
-        public void LoadContent(ContentManager Content)
+        public override void Update(float elapsedGameTime)
+        {
+            SetRectangle(new Rectangle()
+            {
+                X = (int) position.X,
+                Y = (int) position.Y,
+                Width = RectSize,
+                Height = RectSize
+            });
+        }
+
+        public override void LoadContent(ContentManager Content)
         {
             bulletTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Bullet["basic"].DefaultTexture);
             effectTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Effect["basic"][0]);
@@ -114,11 +129,11 @@ namespace Pandemic
             return range;
         }
 
-        public void Draw(SpriteBatch spriteBatch, ScreenManager screen)
+        public override void Draw(SpriteBatch spriteBatch, ScreenManager screen)
         {
             if (alive)
             {
-                spriteBatch.Draw(tileTex, position, Color.White);
+                spriteBatch.Draw(tileTex, screen.translateWorldToScreen(GetRectangle()), Color.White);
             }
         }
     }

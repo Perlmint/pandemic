@@ -16,7 +16,7 @@ namespace Pandemic
     abstract class GameObject
     {
         protected Vector2 position;
-        protected Rectangle rect;
+        private Rectangle rect;
         protected int hp;
         protected virtual Texture2D currentTexture { get { return null; } }
         protected bool isAlive;
@@ -52,14 +52,19 @@ namespace Pandemic
                 return new Rectangle();
         }
 
+        public virtual Rectangle SetRectangle(Rectangle rect)
+        {
+            return this.rect = rect;
+        }
+
         private bool Intersects(GameObject gameObject)
         {
-            return this.rect.Intersects(gameObject.GetRectangle());
+            return this.GetRectangle().Intersects(gameObject.GetRectangle());
         }
 
         public bool Intersects(Rectangle rectangle)
         {
-            return this.rect.Intersects(rectangle);
+            return this.GetRectangle().Intersects(rectangle);
         }
 
         public bool CollidesWith(GameObject other)
