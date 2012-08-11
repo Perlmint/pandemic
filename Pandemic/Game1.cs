@@ -85,7 +85,15 @@ namespace Pandemic
             pathDic.Add(Player.State.alive, "player");
             pathDic.Add(Player.State.dead, "player");
 
-            player.LoadContent(Content, pathDic);
+            player.LoadContent(Content);
+
+            Dictionary<NPC.State, string> pathDicNPC = new Dictionary<NPC.State, string>();
+            pathDicNPC.Add(NPC.State.alive, "player");
+            pathDicNPC.Add(NPC.State.dead, "player");
+
+            NPC npc = new NPC();
+
+            npc.LoadContent(Content);
 
             // TODO: use this.Content to load your game content here
         }
@@ -112,8 +120,19 @@ namespace Pandemic
 
             elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            player.Update(elapsedTime);
-            npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
+            switch (state)
+            {
+                case GameState.main:
+                    break;
+                case GameState.play:
+                    player.Update(elapsedTime);
+
+                    npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
+
+                    break;
+                case GameState.gameover:
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -264,11 +283,12 @@ namespace Pandemic
         protected void setupPlayState()
         {
             npcManager.Initialize();
+            player.Spawn(new Vector2(100, 100));
         }
 
         protected void teardownPlayState()
         {
-           
+            
         }
 
         protected void setupGameoverState()

@@ -29,7 +29,7 @@ namespace Pandemic
         {
             NPCList.Clear();
             numberOfRestGeneratableNPC = 18446744073709551615;
-            NPCGenerateRate = 1;
+            NPCGenerateRate = 5;
             accumulateElapsedTime = 0;
             randomGenerator = new Random();
         }
@@ -43,9 +43,10 @@ namespace Pandemic
                 for (int i = NPCGenerateRate; i > 0 && numberOfRestGeneratableNPC > 0; numberOfRestGeneratableNPC--, i--)
                 {
                     NPC newNPC = new NPC();
-                    newNPC.Spawn(playerPosition + new Vector2((float)(randomGenerator.NextDouble() * 300 + 200), (float)(randomGenerator.NextDouble() * 300 + 200)));
+                    newNPC.Spawn(playerPosition + new Vector2((randomGenerator.Next(2) == 1 ? -1 : 1) * (float)(randomGenerator.NextDouble() * 300 + 200), (randomGenerator.Next(2) == 1 ? -1 : 1) * (float)(randomGenerator.NextDouble() * 300 + 200)));
                     NPCList.Add(newNPC);
                 }
+                NPCGenerateRate += (UInt16)Math.Sqrt(NPCList.Count);
             }
 
             foreach (NPC npc in NPCList)
@@ -56,8 +57,6 @@ namespace Pandemic
             }
 
             NPCList.RemoveAll(npc => !npc.IsAlive());
-
-            NPCGenerateRate += (UInt16)Math.Sqrt(NPCList.Count);
         }
 
         public void Draw(SpriteBatch spriteBatch)
