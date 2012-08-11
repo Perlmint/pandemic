@@ -32,8 +32,8 @@ namespace Pandemic
 
         public void LoadContent(ContentManager Content, Dictionary<State, string> path)
         {
-            base.LoadContent(Content, path[State.alive]);
-            dead = Content.Load<Texture2D>(path[State.dead]);
+            base.LoadContent(Content, Stage.stageInstance.Units.Enemy);
+            dead = Content.Load<Texture2D>(Stage.stageInstance.Units.Dead);
         }
 
         public override void Spawn(Vector2 pos)

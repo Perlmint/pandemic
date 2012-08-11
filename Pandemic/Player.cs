@@ -55,14 +55,9 @@ namespace Pandemic
 
         public void LoadContent(ContentManager Content, Dictionary<State, string> path)
         {
-            base.LoadContent(Content, path[State.alive]);
-            dead = Content.Load<Texture2D>(path[State.dead]);
+            base.LoadContent(Content, Stage.stageInstance.Units.PlayerArmed["basic"].DefaultTexture);
+            dead = Content.Load<Texture2D>(Stage.stageInstance.Units.Player_Death);
             weapon.LoadContent(Content);
-
-            //foreach (Bullet bullet in bullets)
-            //{
-                //bullet.LoadContent(Content, path[State.bullet]);
-            //}
         }
 
         public Bullet[] GetBulletArray()

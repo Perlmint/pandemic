@@ -51,7 +51,7 @@ namespace Pandemic
     {
         public Dictionary<string, RedirectiveTextures> WeaponOnly;
         public Dictionary<string, RedirectiveTextures> Bullet;
-        public Dictionary<string, HashSet<string>> Effect;
+        public Dictionary<string, List<string>> Effect;
         public List<string> Ground;
         public List<string> Obstacle;
     };
@@ -92,8 +92,8 @@ namespace Pandemic
                 Bullet = new Dictionary<string, RedirectiveTextures>() {
                     {"basic", new RedirectiveTextures() { DefaultTexture = "bullet" } }
                 },
-                Effect = new Dictionary<string, HashSet<string>>() {
-                    {"basic", new HashSet<string>() { "effect" } }
+                Effect = new Dictionary<string, List<string>>() {
+                    {"basic", new List<string>() { "effect" } }
                 }
             },
             NPCsAppearSpec = new Dictionary<int, int>()
