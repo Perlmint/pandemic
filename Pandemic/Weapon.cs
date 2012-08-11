@@ -44,7 +44,7 @@ namespace Pandemic
 
             atkCooldown = Stage.stageInstance.WeaponSpec[name].Cooldown;
             effectTimeOut = Stage.stageInstance.WeaponSpec[name].EffectTimeOut;
-            damage = 34;
+            damage = Stage.stageInstance.WeaponSpec[name].damage;
         }
 
         public void Initialize()

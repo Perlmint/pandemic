@@ -32,10 +32,11 @@ namespace Pandemic
         static Texture2D dead;
         static Texture2D tex;
         static Texture2D heart;
-        static Texture2D texUp;
-        static Texture2D texDown;
-        static Texture2D texLeft;
-        static Texture2D texRight;
+        static Dictionary<string, Texture2D> texUp;
+        static Dictionary<string, Texture2D> texDown;
+        static Dictionary<string, Texture2D> texLeft;
+        static Dictionary<string, Texture2D> texRight;
+        string weaponName;
 
         float atkCooldown;
 
@@ -54,13 +55,9 @@ namespace Pandemic
         public Player(Game1 paramGame)
         {
             int i;
-            int[,] area = {
-                              {1,1,1},
-                              {1,2,1},
-                              {1,1,1}
-                          };
+            weaponName = "rpg";
             game = paramGame;
-            weapon = new Weapon("sword");
+            weapon = new Weapon(weaponName);
 
             bullets = new Bullet[MaxBullet];
 
@@ -68,11 +65,41 @@ namespace Pandemic
             {
                 bullets[i] = Bullet.newBasicBullet(weapon.GetDamage(), weapon.GetEffectTimeOut());
             }
+
+            texUp = new Dictionary<string, Texture2D>();
+            texDown = new Dictionary<string, Texture2D>();
+            texLeft = new Dictionary<string, Texture2D>();
+            texRight = new Dictionary<string, Texture2D>();
         }
 
         public override void LoadContent(ContentManager Content)
         {
-            tex = Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["basic"].DefaultTexture);
+            //tex = Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["sword"].DefaultTexture);
+            texUp.Add("sword", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["sword"][PlayerDirection.up]));
+            texDown.Add("sword", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["sword"][PlayerDirection.down]));
+            texLeft.Add("sword", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["sword"][PlayerDirection.left]));
+            texRight.Add("sword", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["sword"][PlayerDirection.right]));
+
+            texUp.Add("dagger", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["dagger"][PlayerDirection.up]));
+            texDown.Add("dagger", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["dagger"][PlayerDirection.down]));
+            texLeft.Add("dagger", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["dagger"][PlayerDirection.left]));
+            texRight.Add("dagger", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["dagger"][PlayerDirection.right]));
+
+            texUp.Add("handgun", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["handgun"][PlayerDirection.up]));
+            texDown.Add("handgun", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["handgun"][PlayerDirection.down]));
+            texLeft.Add("handgun", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["handgun"][PlayerDirection.left]));
+            texRight.Add("handgun", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["handgun"][PlayerDirection.right]));
+
+            texUp.Add("gatling", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["gatling"][PlayerDirection.up]));
+            texDown.Add("gatling", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["gatling"][PlayerDirection.down]));
+            texLeft.Add("gatling", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["gatling"][PlayerDirection.left]));
+            texRight.Add("gatling", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["gatling"][PlayerDirection.right]));
+
+            texUp.Add("rpg", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["rpg"][PlayerDirection.up]));
+            texDown.Add("rpg", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["rpg"][PlayerDirection.down]));
+            texLeft.Add("rpg", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["rpg"][PlayerDirection.left]));
+            texRight.Add("rpg", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["rpg"][PlayerDirection.right]));
+
             dead = Content.Load<Texture2D>(Stage.stageInstance.Units.Player_Death);
             heart = Content.Load<Texture2D>("heart");
             weapon.LoadContent(Content);
@@ -98,6 +125,7 @@ namespace Pandemic
             game.BindKeyboardEventListener(Keys.Down, () => { ChangeDirection(Direction.down); this.Fire(); });
 
             direction = Direction.right;
+            tex = texRight[weaponName];
         }
 
         public override void Spawn(Vector2 pos)
@@ -203,6 +231,21 @@ namespace Pandemic
             if (direction != newDirection)
             {
                 // TODO: change Sprite Image
+                switch (newDirection)
+                {
+                    case Direction.up:
+                        tex = texUp[weaponName];
+                        break;
+                    case Direction.down:
+                        tex = texDown[weaponName];
+                        break;
+                    case Direction.left:
+                        tex = texLeft[weaponName];
+                        break;
+                    case Direction.right:
+                        tex = texRight[weaponName];
+                        break;
+                }
                 direction = newDirection;
             }
         }
