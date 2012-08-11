@@ -22,6 +22,7 @@ namespace Pandemic
         int damage;
         int effectDamage;
         int RectSize;
+        bool validity;
         static int[,] effectArea;
         static Point bulletPos;
 
@@ -33,6 +34,8 @@ namespace Pandemic
             Going,
             Explosion
         };
+
+        public bool IsValid { get { return validity; } }
 
         BulletState state;
 
@@ -52,6 +55,7 @@ namespace Pandemic
 
         public Bullet()
         {
+            validity = true;
         }
 
         public override void LoadContent(ContentManager Content)
@@ -153,6 +157,7 @@ namespace Pandemic
 
         public void Explode()
         {
+            validity = true;
             displacement = 0;
             state = BulletState.Explosion;
             explodeTimeout = 0;

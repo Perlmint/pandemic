@@ -106,7 +106,7 @@ namespace Pandemic
             {
                 if (bullet.IsAlive())
                 {
-                    if (bullet.Intersects(this.GetRectangle()))
+                    if (bullet.IsValid && bullet.CollidesWith(this))
                     {
                         this.AccHP(-bullet.GetDamageValue());
                         bullet.Explode();
