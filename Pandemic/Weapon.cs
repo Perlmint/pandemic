@@ -51,7 +51,7 @@ namespace Pandemic
         {
             bulletTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Bullet["basic"].DefaultTexture);
             effectTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Effect["basic"][0]);
-            // Load Tile Tex
+            // load tileTex
         }
 
         public float GetCooldown()
