@@ -91,8 +91,8 @@ namespace Pandemic
             pathDicNPC.Add(NPC.State.alive, "player");
             pathDicNPC.Add(NPC.State.dead, "player");
 
-            player.LoadContent(Content, pathDic);
-            npc.LoadContent(Content, pathDicNPC);
+            player.LoadContent(Content);
+            npc.LoadContent(Content);
 
             // TODO: use this.Content to load your game content here
         }

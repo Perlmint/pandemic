@@ -22,7 +22,8 @@ namespace Pandemic
         Vector2 destination;
         const float Speed = 1.0f;
         const int MaxHP = 100;
-        Texture2D dead;
+        static Texture2D dead;
+        static Texture2D tex;
         const int RectSize = 30;
 
         float corpseTimer;
@@ -30,9 +31,9 @@ namespace Pandemic
 
         State state;
 
-        public void LoadContent(ContentManager Content, Dictionary<State, string> path)
+        public override void LoadContent(ContentManager Content)
         {
-            base.LoadContent(Content, Stage.stageInstance.Units.Enemy);
+            tex = Content.Load<Texture2D>(Stage.stageInstance.Units.Enemy);
             dead = Content.Load<Texture2D>(Stage.stageInstance.Units.Dead);
         }
 
@@ -111,7 +112,8 @@ namespace Pandemic
                 switch (state)
                 {
                     case State.alive:
-                        base.Draw(spriteBatch);
+                        //base.Draw(spriteBatch);
+                        spriteBatch.Draw(tex, rect, Color.White);
                         break;
                     case State.almost_dead:
                         break;

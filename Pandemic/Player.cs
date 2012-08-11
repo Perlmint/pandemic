@@ -23,7 +23,8 @@ namespace Pandemic
         const int MaxHP = 100;
         const int MaxBullet = 50;
         const int RectSize = 30;
-        Texture2D dead;
+        static Texture2D dead;
+        static Texture2D tex;
 
         float atkCooldown;
 
@@ -53,9 +54,9 @@ namespace Pandemic
             }
         }
 
-        public void LoadContent(ContentManager Content, Dictionary<State, string> path)
+        public override void LoadContent(ContentManager Content)
         {
-            base.LoadContent(Content, Stage.stageInstance.Units.PlayerArmed["basic"].DefaultTexture);
+            tex = Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["basic"].DefaultTexture);
             dead = Content.Load<Texture2D>(Stage.stageInstance.Units.Player_Death);
             weapon.LoadContent(Content);
         }
@@ -160,12 +161,8 @@ namespace Pandemic
         public void GetWeapon(Weapon wpn)
         {
             weapon = wpn;
-
-            foreach (Bullet bullet in bullets)
-            {
-                bullet.SetTexture(weapon.GetBulletTex(), weapon.GetEffectTex());
-                bullet.SetEffectArea(weapon.GetArea());
-            }
+            Bullet.SetTexture(weapon.GetBulletTex(), weapon.GetEffectTex());
+            Bullet.SetEffectArea(weapon.GetArea());
         }
 
         public Vector2 GetPosition()
@@ -180,7 +177,8 @@ namespace Pandemic
                 switch (state)
                 {
                     case State.alive:
-                        base.Draw(spriteBatch);
+                        //base.Draw(spriteBatch);
+                        spriteBatch.Draw(tex, rect, Color.White);
                         break;
                     case State.dead:
                         spriteBatch.Draw(dead, rect, Color.White);

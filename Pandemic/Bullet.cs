@@ -22,11 +22,22 @@ namespace Pandemic
         int damage;
         int effectDamage;
         int RectSize;
-        int[,] effectArea;
-        Point bulletPos;
+        static int[,] effectArea;
+        static Point bulletPos;
 
         float explodeTimeout;
         float TimeOut;
+
+        enum BulletState
+        {
+            Going,
+            Explosion
+        };
+
+        BulletState state;
+
+        static Texture2D effectTex;
+        static Texture2D tex;
 
         public static Bullet newBasicBullet(int dmg)
         {
@@ -39,18 +50,13 @@ namespace Pandemic
             };
         }
 
-        enum BulletState
-        {
-            Going,
-            Explosion
-        };
-
-        BulletState state;
-
-        Texture2D effectTex;
-
         public Bullet()
         {
+        }
+
+        public override void LoadContent(ContentManager Content)
+        {
+            //throw new NotImplementedException();
         }
 
         public override void Spawn(Vector2 pos)
@@ -59,7 +65,7 @@ namespace Pandemic
             state = BulletState.Going;
         }
 
-        public void SetTexture(Texture2D bullet, Texture2D effect)
+        public static void SetTexture(Texture2D bullet, Texture2D effect)
         {
             tex = bullet;
             effectTex = effect;
@@ -71,7 +77,7 @@ namespace Pandemic
             range = (dst - position).Length();
         }
 
-        public void SetEffectArea(int[,] area)
+        public static void SetEffectArea(int[,] area)
         {
             int i, j;
 
@@ -159,7 +165,7 @@ namespace Pandemic
                 switch (state)
                 {
                     case BulletState.Going:
-                        base.Draw(spriteBatch);
+                        spriteBatch.Draw(tex, rect, Color.White);
                         break;
                     case BulletState.Explosion:
                         int i, j;
