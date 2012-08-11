@@ -132,10 +132,6 @@ namespace Pandemic
                     game.Exit();
                     break;
             }
-
-            //game.UnbindKeyboardEvent(Keys.Up);
-            //game.UnbindKeyboardEvent(Keys.Down);
-            //game.UnbindKeyboardEvent(Keys.Enter);
         }
 
         public void Draw(SpriteBatch spriteBatch)

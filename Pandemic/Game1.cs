@@ -308,7 +308,9 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
         protected void teardownMainState()
         {
-            
+            UnbindKeyboardEvent(Keys.Up);
+            UnbindKeyboardEvent(Keys.Down);
+            UnbindKeyboardEvent(Keys.Space);
         }
 
         protected void setupPlayState()
