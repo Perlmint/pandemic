@@ -22,6 +22,10 @@ namespace Pandemic
         SpriteBatch spriteBatch;
         Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         ScreenManager screenManager;
+        NPC npc;
+
+        float elapsedTime;
+
         enum GameState
         {
             main,
@@ -64,6 +68,9 @@ namespace Pandemic
             player = new Player();
             player.Initialize(this);
             player.Spawn(new Vector2(100, 100));
+            npc = new NPC();
+            npc.Initialize();
+            npc.Spawn(new Vector2(200, 200));
             base.Initialize();
         }
 
@@ -79,8 +86,14 @@ namespace Pandemic
             Dictionary<Player.State, string> pathDic = new Dictionary<Player.State,string>();
             pathDic.Add(Player.State.alive, "player");
             pathDic.Add(Player.State.dead, "player");
+            pathDic.Add(Player.State.bullet, "bullet");
+
+            Dictionary<NPC.State, string> pathDicNPC = new Dictionary<NPC.State, string>();
+            pathDicNPC.Add(NPC.State.alive, "player");
+            pathDicNPC.Add(NPC.State.dead, "player");
 
             player.LoadContent(Content, pathDic);
+            npc.LoadContent(Content, pathDicNPC);
 
             // TODO: use this.Content to load your game content here
         }
@@ -105,7 +118,12 @@ namespace Pandemic
 
             ProcessKeyboardEvent();
 
-            player.Update(gameTime);
+            elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            player.Update(elapsedTime);
+
+            npc.SetDestination(player.GetPosition());
+            npc.Update(elapsedTime);
 
             base.Update(gameTime);
         }
@@ -199,6 +217,7 @@ namespace Pandemic
                     break;
                 case GameState.play:
 					player.Draw(spriteBatch);
+                    npc.Draw(spriteBatch);
                     break;
                 case GameState.gameover:
 

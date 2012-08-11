@@ -20,7 +20,7 @@ namespace Pandemic
             alive, almost_dead, dead
         };
         Vector2 destination;
-        const float Speed = 3.0f;
+        const float Speed = 1.0f;
         const int MaxHP = 100;
         Texture2D dead;
 
@@ -36,12 +36,12 @@ namespace Pandemic
             base.Spawn(pos);
         }
 
-        void SetDestination(Vector2 dst)
+        public void SetDestination(Vector2 dst)
         {
             destination = dst;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(float elapsedGameTime)
         {
             //throw new NotImplementedException();
 

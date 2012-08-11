@@ -19,7 +19,7 @@ namespace Pandemic
         protected Rectangle rect;
         protected int hp;
         protected Texture2D tex;
-        bool isAlive;
+        protected bool isAlive;
 
         public GameObject()
         {
@@ -41,11 +41,14 @@ namespace Pandemic
             isAlive = true;
         }
 
-        public abstract void Update(GameTime gameTime);
+        public abstract void Update(float elapsedGameTime);
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tex, position, Color.White);
+            if (isAlive)
+            {
+                spriteBatch.Draw(tex, position, Color.White);
+            }
         }
 
         public bool IsAlive()
