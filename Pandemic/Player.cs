@@ -146,13 +146,13 @@ namespace Pandemic
                 atkCooldown -= elapsedGameTime;
         }
 
-       public void NPCCollision(List<Rectangle> rectList)
+       public void NPCCollision(List<NPC> npcList)
         {
             if (state != State.absolute && state != State.dead)
             {
-                foreach (Rectangle rect in rectList)
+                foreach (NPC npc in npcList)
                 {
-                    if (this.Intersects(rect))
+                    if (this.CollidesWith(npc))
                     {
                         this.AccHP(-1);
                         if (hp > 0)
@@ -255,6 +255,31 @@ namespace Pandemic
         public Vector2 GetPosition()
         {
             return position;
+        }
+
+        protected override Texture2D currentTexture
+        {
+            get
+            {
+                if (this.isAlive)
+                {
+                    switch (state)
+                    {
+                        case State.alive:
+                            return tex;
+                            break;
+                        case State.dead:
+                            return dead;
+                            break;
+                        case State.absolute:
+                            return tex;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                return null;
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)

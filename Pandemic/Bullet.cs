@@ -163,6 +163,23 @@ namespace Pandemic
             explodeTimeout = 0;
         }
 
+        protected override Texture2D currentTexture
+        {
+            get {
+                if (this.isAlive)
+                {
+                    switch (state)
+                    {
+                        case BulletState.Going:
+                            return tex;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                return null;
+            } }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (this.isAlive)

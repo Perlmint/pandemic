@@ -135,8 +135,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="GameOver\GameOver.png">
       <Name>GameOver</Name>
+=======
+    <Compile Include="gameover.png">
+      <Name>gameover</Name>
+>>>>>>> remotes/origin/master
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
