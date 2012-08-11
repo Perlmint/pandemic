@@ -72,6 +72,7 @@ namespace Pandemic
         public float Cooldown;
         public int range;
         public float EffectTimeOut;
+        public int damage;
     };
     class Stage
     {
@@ -102,31 +103,35 @@ namespace Pandemic
             Units = new UnitTextures()
             {
                 PlayerArmed = new Dictionary<string, RedirectiveTextures>() {
-                    {"basic", new RedirectiveTextures("player") { 
+                    {"dagger", new RedirectiveTextures("player") { 
                     {PlayerDirection.up, "Character\\dagger\\dagger-up"},
                     {PlayerDirection.down, "Character\\dagger\\dagger-down"},
                     {PlayerDirection.right, "Character\\dagger\\dagger-right"},
-                    {PlayerDirection.left, "Character\\dagger\\dagger-left"}
-                    /*
-                    {"gatling", new RedirectiveTextures("player") {{PlayerDirection.up, "Character\\gatling\\machine gun-up"},
+                    {PlayerDirection.left, "Character\\dagger\\dagger-left"}}},
+                    
+                    {"gatling", new RedirectiveTextures("player") {
+                    {PlayerDirection.up, "Character\\gatling\\machine gun-up"},
                     {PlayerDirection.down, "Character\\gatling\\machine gun-down"},
                     {PlayerDirection.right, "Character\\gatling\\machine gun-right"},
-                    {PlayerDirection.left, "Character\\gatling\\machine gun-left"},
+                    {PlayerDirection.left, "Character\\gatling\\machine gun-left"}}},
 
+                    {"rpg", new RedirectiveTextures("player") {
                     {PlayerDirection.up, "Character\\rpg\\rpg-up"},
                     {PlayerDirection.down, "Character\\rpg\\rpg-down"},
                     {PlayerDirection.right, "Character\\rpg\\rpg-right"},
-                    {PlayerDirection.left, "Character\\rpg\\rpg-left"},
+                    {PlayerDirection.left, "Character\\rpg\\rpg-left"}}},
 
+                    {"sword", new RedirectiveTextures("player") {
                     {PlayerDirection.up, "Character\\sword\\sword-up"},
                     {PlayerDirection.down, "Character\\sword\\sword-down"},
                     {PlayerDirection.right, "Character\\sword\\sword-right"},
-                    {PlayerDirection.left, "Character\\sword\\sword-left"},
+                    {PlayerDirection.left, "Character\\sword\\sword-left"}}},
 
-                    {PlayerDirection.up, "Character\\sword\\sword-up"},
-                    {PlayerDirection.down, "Character\\sword\\sword-down"},
-                    {PlayerDirection.right, "Character\\sword\\sword-right"},
-                    {PlayerDirection.left, "Character\\sword\\sword-left"},*/
+                    {"handgun", new RedirectiveTextures("player") {
+                    {PlayerDirection.up, "Character\\handgun\\gun-up"},
+                    {PlayerDirection.down, "Character\\handgun\\gun-down"},
+                    {PlayerDirection.right, "Character\\handgun\\gun-right"},
+                    {PlayerDirection.left, "Character\\handgun\\gun-left"}
                     } }
                 },
                 Player_Death = "player_death",
@@ -201,7 +206,8 @@ namespace Pandemic
                     {0,1,1}},
                     Cooldown = 1.0f,
                     range = 1,
-                    EffectTimeOut = 0.1f
+                    EffectTimeOut = 0.1f,
+                    damage = 35
                 }},
                 {"handgun", new WeaponSpec() {
                     AttackAreaUp = new int[,] {
@@ -214,7 +220,8 @@ namespace Pandemic
                     {2}},
                     Cooldown = 0.5f,
                     range = 400,
-                    EffectTimeOut = 0.1f
+                    EffectTimeOut = 0.1f,
+                    damage = 50
                 }},
                 {"sword", new WeaponSpec() {
                     AttackAreaLeft = new int[,] {
@@ -243,7 +250,8 @@ namespace Pandemic
                     {0,0,0,0,1}},
                     Cooldown = 0.5f,
                     range = 1,
-                    EffectTimeOut = 0.1f
+                    EffectTimeOut = 0.1f,
+                    damage = 50
                 }},
                 {"gatling", new WeaponSpec() {
                     AttackAreaUp = new int[,] {
@@ -256,9 +264,10 @@ namespace Pandemic
                     {2}},
                     Cooldown = 0.2f,
                     range = 400,
-                    EffectTimeOut = 0.1f
+                    EffectTimeOut = 0.1f,
+                    damage = 35
                 }},
-                {"RPG", new WeaponSpec() {
+                {"rpg", new WeaponSpec() {
                     AttackAreaUp = new int[,] {
                     {1,1,1},
                     {1,2,1},
@@ -277,7 +286,8 @@ namespace Pandemic
                     {1,1,1}},
                     Cooldown = 0.5f,
                     range = 400,
-                    EffectTimeOut = 0.1f
+                    EffectTimeOut = 0.5f,
+                    damage = 100
                 }}
             }
         };
