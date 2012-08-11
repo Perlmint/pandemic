@@ -20,6 +20,7 @@ namespace Pandemic
         float displacement;
         float range;
         int damage;
+        int effectDamage;
         int RectSize;
         int[,] effectArea;
         Point bulletPos;

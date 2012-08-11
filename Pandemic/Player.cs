@@ -155,11 +155,20 @@ namespace Pandemic
                 if (i < MaxBullet)
                 {
                     bullets[i].Spawn(position);
-                    bullets[i].SetTexture(weapon.GetBulletTex(), weapon.GetEffectTex());
-                    bullets[i].SetEffectArea(weapon.GetArea());
                     bullets[i].SetDestination(position + new Vector2(weapon.GetRange(), 0));
                     atkCooldown = weapon.GetCooldown();
                 }
+            }
+        }
+
+        public void GetWeapon(Weapon wpn)
+        {
+            weapon = wpn;
+
+            foreach (Bullet bullet in bullets)
+            {
+                bullet.SetTexture(weapon.GetBulletTex(), weapon.GetEffectTex());
+                bullet.SetEffectArea(weapon.GetArea());
             }
         }
 

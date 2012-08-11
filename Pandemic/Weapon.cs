@@ -64,6 +64,7 @@ namespace Pandemic
             return damage;
         }
 
+
         public Texture2D GetBulletTex()
         {
             return bulletTex;
