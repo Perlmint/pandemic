@@ -9,11 +9,12 @@ namespace Pandemic
 {
     class NPCManager
     {
-        UInt64 numberOfRestGeneratableNPC;
-        UInt16 NPCGenerateRate;
+        UInt32 numberOfRestGeneratableNPC;
+        UInt16 NPCGenerationRate;
+        float NPCBasicGenerationRate;
 
         float accumulateElapsedTime;
-        const float generateInterval = 3;
+        const float generateInterval = 0.5f;
 
         List<NPC> NPCList;
 
@@ -28,25 +29,37 @@ namespace Pandemic
         public void Initialize()
         {
             NPCList.Clear();
-            numberOfRestGeneratableNPC = 18446744073709551615;
-            NPCGenerateRate = 5;
+            numberOfRestGeneratableNPC = 2147483647;
+            NPCGenerationRate = 5;
+            NPCBasicGenerationRate = 5;
             accumulateElapsedTime = 0;
             randomGenerator = new Random();
+            for (int i = 0; i < 5; i++)
+            {
+                NPCList.Add(createNPC(new Vector2(200, 200)));
+            }
+        }
+
+        protected NPC createNPC(Vector2 playerPosition)
+        {
+            NPC newNPC = new NPC();
+            newNPC.Spawn(playerPosition + new Vector2((randomGenerator.Next(2) == 1 ? -1 : 1) * (float)(randomGenerator.NextDouble() * 300 + 200), (randomGenerator.Next(2) == 1 ? -1 : 1) * (float)(randomGenerator.NextDouble() * 300 + 200)));
+            return newNPC;
         }
 
         public void Update(float elapsedTime, Vector2 playerPosition, Bullet[] playerBullets)
         {
             accumulateElapsedTime += elapsedTime;
+            NPCBasicGenerationRate += elapsedTime * 0.1f;
 
             for (; accumulateElapsedTime > generateInterval; accumulateElapsedTime -= generateInterval)
             {
-                for (int i = NPCGenerateRate; i > 0 && numberOfRestGeneratableNPC > 0; numberOfRestGeneratableNPC--, i--)
+                NPCGenerationRate = (UInt16)(NPCBasicGenerationRate / 5 + Math.Sqrt(Math.Pow(NPCList.Count, 2) / Math.Sqrt(numberOfRestGeneratableNPC)));
+                for (int i = NPCGenerationRate; i > 0 && numberOfRestGeneratableNPC > 0; numberOfRestGeneratableNPC--, i--)
                 {
-                    NPC newNPC = new NPC();
-                    newNPC.Spawn(playerPosition + new Vector2((randomGenerator.Next(2) == 1 ? -1 : 1) * (float)(randomGenerator.NextDouble() * 300 + 200), (randomGenerator.Next(2) == 1 ? -1 : 1) * (float)(randomGenerator.NextDouble() * 300 + 200)));
+                    NPC newNPC = createNPC(playerPosition);
                     NPCList.Add(newNPC);
                 }
-                NPCGenerateRate += (UInt16)Math.Sqrt(NPCList.Count);
             }
 
             foreach (NPC npc in NPCList)

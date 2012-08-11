@@ -233,8 +233,8 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
                     mainMenu.Draw(spriteBatch);
                     break;
                 case GameState.play:
-					player.Draw(spriteBatch);
                     npcManager.Draw(spriteBatch);
+                    player.Draw(spriteBatch);
                     break;
                 case GameState.gameover:
 

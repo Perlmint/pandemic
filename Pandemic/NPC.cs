@@ -29,6 +29,8 @@ namespace Pandemic
         float corpseTimer;
         const float CorpseTimeOut = 3.0f;
 
+        static Random randomGenerator = new Random();
+
         State state;
 
         public override void LoadContent(ContentManager Content)
@@ -66,7 +68,13 @@ namespace Pandemic
                 switch (state)
                 {
                     case State.alive:
-                        position += Vector2.Normalize(destination - position) * Speed;
+                        Vector2 temp = destination - position;
+                        if (temp.Length() > 100)
+                        {
+                            temp += new Vector2((float)(randomGenerator.NextDouble() - 0.5) * 100);
+                        }
+
+                        position += Vector2.Normalize(temp) * Speed;
 
                         if (hp < 0)
                         {
