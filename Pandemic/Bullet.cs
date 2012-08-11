@@ -158,7 +158,7 @@ namespace Pandemic
             explodeTimeout = 0;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch, ScreenManager screen)
         {
             if (this.isAlive)
             {

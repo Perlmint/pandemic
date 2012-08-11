@@ -17,21 +17,35 @@ namespace Pandemic
     class Map
     {
         int width, height;
-        Obstacle[] Obstacles;
+        HashSet<Obstacle> Obstacles;
+        List<Texture2D> baseTxs;
 
         public static Map createFromStage(Stage stage)
         {
-            return new Map()
+            HashSet<Obstacle> nObstacles;
+            Map nMap = new Map()
             {
                 width = stage.MapWidth,
                 height = stage.MapHeight,
-                Obstacles = new Obstacle[] {}
+                Obstacles = nObstacles = new HashSet<Obstacle>() {}
             };
+            foreach (KeyValuePair<Vector2, string> e in Stage.stageInstance.ObstaclesArrangeSpec)
+                nObstacles.Add(new Obstacle(e.Key, e.Value));
+            return nMap;
+        }
+
+        public void LoadContent(ContentManager Content)
+        {
+            baseTxs = new List<Texture2D> {};
+            foreach (string path in Stage.stageInstance.NonUnits.Ground.ToArray())
+                baseTxs.Add(Content.Load<Texture2D>(path));
+            foreach(Obstacle o in Obstacles)
+                o.LoadContent(Content);
         }
 
         public void Draw(SpriteBatch spriteBatch, ScreenManager screen)
         {
-
+            
         }
     }
 }

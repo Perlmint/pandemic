@@ -252,7 +252,7 @@ namespace Pandemic
             return position;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch, ScreenManager screen)
         {
             if (IsAlive())
             {
@@ -274,7 +274,7 @@ namespace Pandemic
             }
 
             foreach (Bullet bullet in bullets)
-                bullet.Draw(spriteBatch);
+                bullet.Draw(spriteBatch, screen);
 
             for (int i = 0; i < hp; i++)
             {

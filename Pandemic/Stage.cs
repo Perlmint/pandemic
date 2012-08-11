@@ -59,6 +59,7 @@ namespace Pandemic
     {
         public int MapWidth, MapHeight;
         public int ScreenWidth, ScreenHeight;
+        public int TileWidth, TileHeight;
         public Vector2 PlayerInitialPosition;
         public string[] weapons;
         public string[] obstacles;
@@ -74,6 +75,8 @@ namespace Pandemic
             MapHeight = 1800,
             ScreenWidth = 800,
             ScreenHeight = 600,
+            TileWidth = 50,
+            TileHeight = 50,
             PlayerInitialPosition = new Vector2(30, 20),
             weapons = new string[] { "basic", "advanced", "extreme" },
             obstacles = new string[] { "house1", "house2", "house3", "house4", "tree1", "tree2", "stone" },
@@ -97,6 +100,17 @@ namespace Pandemic
                 },
                 Effect = new Dictionary<string, List<string>>() {
                     {"basic", new List<string>() { "effect" } }
+                },
+                Ground = new List<string> {
+                    "ground1", "ground2"
+                },
+                Obstacle = new Dictionary<string, string>() {
+                    {"house1", "house1"},
+                    {"house2", "house2"},
+                    {"house3", "house3"},
+                    {"house4", "house4"},
+                    {"stone", "stone"}
+                        
                 }
             },
             NPCsAppearSpec = new Dictionary<int, int>()
@@ -113,6 +127,13 @@ namespace Pandemic
             },
             ObstaclesArrangeSpec = new Dictionary<Vector2, string>()
             {
+                {new Vector2(1, 1), "house1"},
+                {new Vector2(1, 2), "house2"},
+                {new Vector2(2, 1), "house3"},
+                {new Vector2(2, 2), "house4"},
+                {new Vector2(5, 1), "stone"},
+                {new Vector2(7, 4), "stone"},
+                {new Vector2(2, 6), "stone"},
             }
         };
     }
