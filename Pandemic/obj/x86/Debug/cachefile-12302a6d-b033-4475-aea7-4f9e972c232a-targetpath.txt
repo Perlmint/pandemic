@@ -1,7 +1,0 @@
-Content\player.xnb
-Content\bullet.xnb
-Content\effect.xnb
-Content\player_death.xnb
-Content\enemy.xnb
-Content\normal.xnb
-Content\blood.xnb
