@@ -20,9 +20,15 @@ namespace Pandemic
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
+        
+Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
+
         ScreenManager screenManager;
-        NPC npc;
+        GameState state;
+        Player player;
+		NPCManager npcManager;
+        Stage stage;
+        Map map;
 
         float elapsedTime;
 
@@ -32,9 +38,6 @@ namespace Pandemic
             play,
             gameover
         };
-
-        GameState state;
-        Player player;
 
         static Action Curry<T>(Action<T> action, T parameter)
         {
@@ -49,6 +52,7 @@ namespace Pandemic
 
             keyboardEventListeners = new Dictionary<Keys, LinkedList<keyboardEventListener>>();
             screenManager = new ScreenManager();
+            npcManager = NPCManager.SharedManager;
 
             Content.RootDirectory = "Content";
         }
@@ -62,14 +66,15 @@ namespace Pandemic
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            stage = Stage.stageInstance;
+            map = Map.createFromStage(stage);
             state = GameState.main;
             setupMainState();
+            screenManager.setSizeFromStage(stage);
+            screenManager.applySizeToGraphicsMgr(graphics);
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             player = new Player();
             player.Initialize(this);
-            
-            npc = new NPC();
-            npc.Initialize();
             
             base.Initialize();
         }
@@ -87,11 +92,14 @@ namespace Pandemic
             pathDic.Add(Player.State.alive, "player");
             pathDic.Add(Player.State.dead, "player");
 
+            player.LoadContent(Content);
+
             Dictionary<NPC.State, string> pathDicNPC = new Dictionary<NPC.State, string>();
             pathDicNPC.Add(NPC.State.alive, "player");
             pathDicNPC.Add(NPC.State.dead, "player");
 
-            player.LoadContent(Content);
+            NPC npc = new NPC();
+
             npc.LoadContent(Content);
 
             // TODO: use this.Content to load your game content here
@@ -126,9 +134,7 @@ namespace Pandemic
                 case GameState.play:
                     player.Update(elapsedTime);
 
-                    npc.SetDestination(player.GetPosition());
-                    npc.Update(elapsedTime);
-                    npc.CheckBulletCollision(player.GetBulletArray());
+                    npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
 
                     break;
                 case GameState.gameover:
@@ -227,7 +233,7 @@ namespace Pandemic
                     break;
                 case GameState.play:
 					player.Draw(spriteBatch);
-                    npc.Draw(spriteBatch);
+                    npcManager.Draw(spriteBatch);
                     break;
                 case GameState.gameover:
 
@@ -248,8 +254,10 @@ namespace Pandemic
                         teardownMainState();
                         break;
                     case GameState.play:
+                        teardownPlayState();
                         break;
                     case GameState.gameover:
+                        teardownGameoverState();
                         break;
                 }
 
@@ -281,12 +289,22 @@ namespace Pandemic
 
         protected void setupPlayState()
         {
-            npc.Spawn(new Vector2(200, 200));
+            npcManager.Initialize();
             player.Spawn(new Vector2(100, 100));
+        }
+
+        protected void teardownPlayState()
+        {
+            
         }
 
         protected void setupGameoverState()
         {
+        }
+
+        protected void teardownGameoverState()
+        {
+            
         }
     }
 }
