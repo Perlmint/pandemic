@@ -87,6 +87,7 @@
     <Compile Include="Bullet.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="GameOver.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="NPC.cs" />

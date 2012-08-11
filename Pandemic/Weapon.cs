@@ -16,7 +16,10 @@ namespace Pandemic
     class Weapon
     {
         int range;
-        int[,] atkArea;
+        int[,] atkAreaUp;
+        int[,] atkAreaDown;
+        int[,] atkAreaRight;
+        int[,] atkAreaLeft;
         Vector2 position;
 
         float atkCooldown;
@@ -26,15 +29,22 @@ namespace Pandemic
         Texture2D tileTex;
 
         int damage;
+        float effectTimeOut;
 
         bool alive;
 
-        public Weapon(int weaponRange, int[,] attackArea, float cooldown, int dmg)
+        public Weapon(string name)
         {
-            range = weaponRange;
-            atkArea = attackArea;
-            atkCooldown = cooldown;
-            damage = dmg;
+            range = Stage.stageInstance.WeaponSpec[name].range;
+
+            atkAreaUp = Stage.stageInstance.WeaponSpec[name].AttackAreaUp;
+            atkAreaDown = Stage.stageInstance.WeaponSpec[name].AttackAreaDown;
+            atkAreaRight = Stage.stageInstance.WeaponSpec[name].AttackAreaRight;
+            atkAreaLeft = Stage.stageInstance.WeaponSpec[name].AttackAreaLeft;
+
+            atkCooldown = Stage.stageInstance.WeaponSpec[name].Cooldown;
+            effectTimeOut = Stage.stageInstance.WeaponSpec[name].EffectTimeOut;
+            damage = 34;
         }
 
         public void Initialize()
@@ -64,6 +74,10 @@ namespace Pandemic
             return damage;
         }
 
+        public float GetEffectTimeOut()
+        {
+            return effectTimeOut;
+        }
 
         public Texture2D GetBulletTex()
         {
@@ -75,9 +89,24 @@ namespace Pandemic
             return effectTex;
         }
 
-        public int[,] GetArea()
+        public int[,] GetAreaUp()
         {
-            return atkArea;
+            return atkAreaUp;
+        }
+
+        public int[,] GetAreaDown()
+        {
+            return atkAreaDown;
+        }
+
+        public int[,] GetAreaRight()
+        {
+            return atkAreaRight;
+        }
+
+        public int[,] GetAreaLeft()
+        {
+            return atkAreaLeft;
         }
 
         public int GetRange()

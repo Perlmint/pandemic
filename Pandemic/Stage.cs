@@ -55,6 +55,17 @@ namespace Pandemic
         public List<string> Ground;
         public Dictionary<string, string> Obstacle;
     };
+
+    public class WeaponSpec
+    {
+        public int[,] AttackAreaUp;
+        public int[,] AttackAreaDown;
+        public int[,] AttackAreaLeft;
+        public int[,] AttackAreaRight;
+        public float Cooldown;
+        public int range;
+        public float EffectTimeOut;
+    };
     class Stage
     {
         public int MapWidth, MapHeight;
@@ -67,6 +78,7 @@ namespace Pandemic
         public Dictionary<int /*appear_uptime_in_map*/, int /*num_of_enemies*/> NPCsAppearSpec;
         public Dictionary<int /*appear_uptime_in_map*/, string /*name_of_weapon*/> WeaponsAppearSpec;
         public Dictionary<Vector2 /*position_in_map*/, string /*name_of_obstacle*/> ObstaclesArrangeSpec;
+        public Dictionary<string, WeaponSpec> WeaponSpec;
 
         public static Stage stageInstance = new Stage()
         {
@@ -113,6 +125,107 @@ namespace Pandemic
             },
             ObstaclesArrangeSpec = new Dictionary<Vector2, string>()
             {
+            },
+
+            WeaponSpec = new Dictionary<string,WeaponSpec>()
+            {
+                {"dagger", new WeaponSpec() {
+                    AttackAreaLeft = new int[,] {
+                    {0,1,0},
+                    {1,1,1},
+                    {1,2,1}},
+                    AttackAreaRight = new int[,] {
+                    {1,2,1},
+                    {1,1,1},
+                    {0,1,0}},
+                    AttackAreaDown = new int[,] {
+                    {1,1,0},
+                    {2,1,1},
+                    {1,1,0}},
+                    AttackAreaUp = new int[,] {
+                    {0,1,1},
+                    {1,1,2},
+                    {0,1,1}},
+                    Cooldown = 1.0f,
+                    range = 1,
+                    EffectTimeOut = 0.1f
+                }},
+                {"handgun", new WeaponSpec() {
+                    AttackAreaUp = new int[,] {
+                    {2}},
+                    AttackAreaDown = new int[,] {
+                    {2}},
+                    AttackAreaRight = new int[,] {
+                    {2}},
+                    AttackAreaLeft = new int[,] {
+                    {2}},
+                    Cooldown = 0.5f,
+                    range = 400,
+                    EffectTimeOut = 0.1f
+                }},
+                {"sword", new WeaponSpec() {
+                    AttackAreaLeft = new int[,] {
+                    {0,0,0,0,0},
+                    {0,0,1,0,0},
+                    {0,1,1,1,0},
+                    {0,1,1,1,0},
+                    {1,1,2,1,1}},
+                    AttackAreaRight = new int[,] {
+                    {1,1,2,1,1},
+                    {0,1,1,1,0},
+                    {0,1,1,1,0},
+                    {0,0,1,0,0},
+                    {0,0,0,0,0}},
+                    AttackAreaDown = new int[,] {
+                    {1,0,0,0,0},
+                    {1,1,1,1,0},
+                    {2,1,1,1,1},
+                    {1,1,1,1,0},
+                    {1,0,0,0,0}},
+                    AttackAreaUp = new int[,] {
+                    {0,0,0,0,1},
+                    {0,1,1,1,1},
+                    {1,1,1,1,2},
+                    {0,1,1,1,1},
+                    {0,0,0,0,1}},
+                    Cooldown = 1.5f,
+                    range = 1,
+                    EffectTimeOut = 0.1f
+                }},
+                {"gatling", new WeaponSpec() {
+                    AttackAreaUp = new int[,] {
+                    {2}},
+                    AttackAreaDown = new int[,] {
+                    {2}},
+                    AttackAreaRight = new int[,] {
+                    {2}},
+                    AttackAreaLeft = new int[,] {
+                    {2}},
+                    Cooldown = 0.2f,
+                    range = 400,
+                    EffectTimeOut = 0.1f
+                }},
+                {"RPG", new WeaponSpec() {
+                    AttackAreaUp = new int[,] {
+                    {1,1,1},
+                    {1,2,1},
+                    {1,1,1}},
+                    AttackAreaDown = new int[,] {
+                    {1,1,1},
+                    {1,2,1},
+                    {1,1,1}},
+                    AttackAreaRight = new int[,] {
+                    {1,1,1},
+                    {1,2,1},
+                    {1,1,1}},
+                    AttackAreaLeft = new int[,] {
+                    {1,1,1},
+                    {1,2,1},
+                    {1,1,1}},
+                    Cooldown = 0.5f,
+                    range = 400,
+                    EffectTimeOut = 0.1f
+                }}
             }
         };
     }

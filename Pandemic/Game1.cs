@@ -31,6 +31,7 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         Map map;
         MainMenu mainMenu;
         Song bgm;
+        GameOver gameOver;
 
         float elapsedTime;
 
@@ -41,11 +42,6 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             play,
             gameover
         };
-
-        static Action Curry<T>(Action<T> action, T parameter)
-        {
-            return () => action(parameter);
-        }
 		
         public delegate void keyboardEventListener();
 
@@ -79,6 +75,7 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             player = new Player(this);
 
             mainMenu = new MainMenu(this);
+            gameOver = new GameOver();
             //mainMenu.Initialize();
             
             base.Initialize();
@@ -98,6 +95,7 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
             player.LoadContent(Content);
             mainMenu.LoadContent(Content);
+            gameOver.LoadContent(Content);
             bgm = Content.Load<Song>(Constants.MusicFolder + "\\" + Constants.BackgroundMusic);
             
             MediaPlayer.IsRepeating = true;
@@ -140,10 +138,11 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
                     player.Update(elapsedTime);
 
                     npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
-                    player.NPCCollision(npcManager.NPCs);
+                    //player.NPCCollision(npcManager.NPCs);
 
                     break;
                 case GameState.gameover:
+                    gameOver.Update(elapsedTime);
                     break;
             }
 
@@ -244,7 +243,7 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
                     player.Draw(spriteBatch);
                     break;
                 case GameState.gameover:
-
+                    gameOver.Draw(spriteBatch);
                     break;
             }
             spriteBatch.End();
@@ -304,7 +303,7 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
         protected void setupOpeningState()
         {
-            BindKeyboardEventListener(Keys.Enter, new keyboardEventListener(Curry(changeState, GameState.main)));
+            BindKeyboardEventListener(Keys.Enter, new keyboardEventListener(() => changeState(GameState.main)));
         }
 
         protected void teardownOpeningState()
@@ -343,7 +342,8 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
         protected void setupGameoverState()
         {
-            this.BindKeyboardEventListener(Keys.Enter,new keyboardEventListener(Curry(changeState, GameState.main)));
+            this.BindKeyboardEventListener(Keys.Enter,new keyboardEventListener(() => changeState(GameState.main)));
+            gameOver.Initialize();
         }
 
         protected void teardownGameoverState()
