@@ -21,7 +21,7 @@ namespace Pandemic
     public class RedirectiveTextures : Dictionary<PlayerDirection, string>
     {
         public string DefaultTexture;
-        public override string get(PlayerDirection key)
+        public string get(PlayerDirection key)
         {
             string texture;
             if (this.TryGetValue(key, out texture))
@@ -29,9 +29,13 @@ namespace Pandemic
             else
                 return DefaultTexture;
         }
-        public override bool TryGetValue(PlayerDirection key, out string value)
+        public bool ETryGetValue(PlayerDirection key, out string value)
         {
-            value = this[key];
+            string evalue;
+            if (TryGetValue(key, out evalue))
+                value = evalue;
+            else
+                value = DefaultTexture;
             return true;
         }
     }
