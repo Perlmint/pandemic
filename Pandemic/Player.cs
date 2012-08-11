@@ -53,6 +53,7 @@ namespace Pandemic
         Game1 game;
 
         ScreenManager screenManager;
+        Map map;
 
         public Player(Game1 paramGame)
         {
@@ -115,6 +116,11 @@ namespace Pandemic
         public void updateScreenManager(ScreenManager screenManager)
         {
             this.screenManager = screenManager;
+        }
+
+        public void updateMap(Map map)
+        {
+            this.map = map;
         }
 
         public void Initialize(Game1 game)
@@ -219,29 +225,42 @@ namespace Pandemic
 
         void MoveUp()
         {
-            position.Y -= Speed;
+            updatePosition(new Vector2(0, - Speed));
+            ChangeDirection(Direction.up);
+            tex = texUp[weaponName];
         }
 
         void MoveDown()
         {
-            position.Y += Speed;
+            updatePosition(new Vector2(0, + Speed));
+            ChangeDirection(Direction.down);
+            tex = texDown[weaponName];
         }
 
         void MoveLeft()
         {
-            position.X -= Speed;
+            updatePosition(new Vector2(- Speed, 0));
+            ChangeDirection(Direction.left);
+            tex = texLeft[weaponName];
         }
 
         void MoveRight()
         {
-            position.X += Speed;
+            updatePosition(new Vector2(+ Speed, 0));
             ChangeDirection(Direction.right);
             tex = texRight[weaponName];
         }
 
-        void updatePosition()
+        bool updatePosition(Vector2 offset)
         {
-
+            if (map.isInMap(position + offset))
+            {
+                position += offset;
+                screenManager.SetScreenCenter(position - screenManager.GetScreenSize() / 2 * map.TotalRelativeCoord(position));
+                return true;
+            }
+            else
+                return false;
         }
 
         void ChangeDirection(Direction newDirection)

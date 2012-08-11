@@ -30,6 +30,16 @@ namespace Pandemic
             return ((screenCoord - screenTranslate) + screenCenter) / scale;
         }
 
+        public void SetScreenCenter(Vector2 screenCenter)
+        {
+            this.screenCenter = screenCenter;
+        }
+
+        public Vector2 GetScreenSize()
+        {
+            return new Vector2(width, height);
+        }
+
         public Rectangle translateWorldToScreen(Rectangle worldRect)
         {
             return new Rectangle()

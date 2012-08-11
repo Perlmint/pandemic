@@ -177,8 +177,8 @@ namespace Pandemic
             ObstaclesArrangeSpec = new Dictionary<Vector2, string>()
             {
                 {new Vector2(1, 1), "house1"},
-                {new Vector2(1, 2), "house2"},
-                {new Vector2(2, 1), "house3"},
+                {new Vector2(1, 2), "house3"},
+                {new Vector2(2, 1), "house2"},
                 {new Vector2(2, 2), "house4"},
                 {new Vector2(5, 1), "stone"},
                 {new Vector2(7, 4), "stone"},
