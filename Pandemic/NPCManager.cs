@@ -22,6 +22,9 @@ namespace Pandemic
 
         Random randomGenerator;
 
+        public float playTime { get { return (NPCBasicGenerationRate - 5) * 10; } }
+        public UInt32 kill { get { return (UInt32)(2147483647 - numberOfRestGeneratableNPC - NPCList.Count); } }
+
         protected NPCManager()
         {
             NPCList = new List<NPC>();

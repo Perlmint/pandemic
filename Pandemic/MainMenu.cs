@@ -48,7 +48,7 @@ namespace Pandemic
         {
             game.BindKeyboardEventListener(Keys.Up, this.MoveUp);
             game.BindKeyboardEventListener(Keys.Down, this.MoveDown);
-            game.BindKeyboardEventListener(Keys.Space, this.Select);
+            game.BindKeyboardEventListener(Keys.Enter, this.Select);
 
             selected = Selected.start;
         }
@@ -118,6 +118,7 @@ namespace Pandemic
                     game.Play();
                     break;
                 case Selected.help:
+                    game.Help();
                     break;
                 case Selected.exit:
                     game.Exit();

@@ -31,21 +31,19 @@ namespace Pandemic
         Map map;
         MainMenu mainMenu;
         Song bgm;
+        Song bgm2;
+        GameOver gameOver;
+        ImageDisplay help;
 
         float elapsedTime;
 
         enum GameState
         {
-            opening,
             main,
             play,
-            gameover
+            gameover,
+            help
         };
-
-        static Action Curry<T>(Action<T> action, T parameter)
-        {
-            return () => action(parameter);
-        }
 		
         public delegate void keyboardEventListener();
 
@@ -71,15 +69,19 @@ namespace Pandemic
             // TODO: Add your initialization logic here
             stage = Stage.stageInstance;
             map = Map.createFromStage(stage);
-            state = GameState.opening;
-            setupOpeningState();
+            state = GameState.main;
+            //setupOpeningState();
             screenManager.setSizeFromStage(stage);
             screenManager.applySizeToGraphicsMgr(graphics);
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             player = new Player(this);
 
             mainMenu = new MainMenu(this);
+            gameOver = new GameOver();
+            help = new ImageDisplay();
             //mainMenu.Initialize();
+
+            setupMainState();
             
             base.Initialize();
         }
@@ -98,11 +100,14 @@ namespace Pandemic
 
             player.LoadContent(Content);
             mainMenu.LoadContent(Content);
+            gameOver.LoadContent(Content);
+            help.LoadContent(Content, "GameOver\\GameOver");
             bgm = Content.Load<Song>(Constants.MusicFolder + "\\" + Constants.BackgroundMusic);
+            bgm2 = Content.Load<Song>(Constants.MusicFolder + "\\they are comming");
             
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(bgm);
-            MediaPlayer.Pause();
+            //MediaPlayer.Pause();
 
             // TODO: use this.Content to load your game content here
         }
@@ -131,8 +136,6 @@ namespace Pandemic
 
             switch (state)
             {
-                case GameState.opening:
-                    break;
                 case GameState.main:
                     mainMenu.Update(elapsedTime);
                     break;
@@ -144,6 +147,10 @@ namespace Pandemic
 
                     break;
                 case GameState.gameover:
+                    gameOver.Update(elapsedTime);
+                    break;
+                case GameState.help:
+                    help.Update(elapsedTime);
                     break;
             }
 
@@ -234,8 +241,6 @@ namespace Pandemic
             spriteBatch.Begin();
             switch (state)
             {
-                case GameState.opening:
-                    break;
                 case GameState.main:
                     mainMenu.Draw(spriteBatch);
                     break;
@@ -245,12 +250,20 @@ namespace Pandemic
                     player.Draw(spriteBatch, screenManager);
                     break;
                 case GameState.gameover:
-
+                    gameOver.Draw(spriteBatch);
+                    break;
+                case GameState.help:
+                    help.Draw(spriteBatch);
                     break;
             }
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void Help()
+        {
+            changeState(GameState.help);
         }
 
         public void Play()
@@ -270,9 +283,6 @@ namespace Pandemic
             {
                 switch (state)
                 {
-                    case GameState.opening:
-                        teardownOpeningState();
-                        break;
                     case GameState.main:
                         teardownMainState();
                         break;
@@ -282,13 +292,13 @@ namespace Pandemic
                     case GameState.gameover:
                         teardownGameoverState();
                         break;
+                    case GameState.help:
+                        teardownHelpState();
+                        break;
                 }
 
                 switch (newState)
                 {
-                    case GameState.opening:
-                        setupOpeningState();
-                        break;
                     case GameState.main:
                         setupMainState();
                         break;
@@ -298,36 +308,42 @@ namespace Pandemic
                     case GameState.gameover:
                         setupGameoverState();
                         break;
+                    case GameState.help:
+                        setupHelpState();
+                        break;
                 }
                 state = newState;
             }
         }
 
-        protected void setupOpeningState()
-        {
-            BindKeyboardEventListener(Keys.Enter, new keyboardEventListener(Curry(changeState, GameState.main)));
-        }
-
-        protected void teardownOpeningState()
-        {
-            UnbindKeyboardEvent(Keys.Enter);
-        }
-
         protected void setupMainState()
         {
-            mainMenu.Initialize();
             MediaPlayer.Resume();
+            mainMenu.Initialize();
         }
 
         protected void teardownMainState()
         {
             UnbindKeyboardEvent(Keys.Up);
             UnbindKeyboardEvent(Keys.Down);
-            UnbindKeyboardEvent(Keys.Space);
+            UnbindKeyboardEvent(Keys.Enter);
+        }
+
+        protected void teardownHelpState()
+        {
+            UnbindKeyboardEvent(Keys.Space);  
+        }
+
+        protected void setupHelpState()
+        {
+            BindKeyboardEventListener(Keys.Space, new keyboardEventListener(() => changeState(GameState.main)));
+            help.Initialize();
         }
 
         protected void setupPlayState()
         {
+            MediaPlayer.Stop();
+            MediaPlayer.Play(bgm2);
             npcManager.Initialize();
             player.Initialize(this);
             player.Spawn(Stage.stageInstance.PlayerInitialPosition);
@@ -340,11 +356,14 @@ namespace Pandemic
             this.UnbindKeyboardEvent(Keys.Right);
             this.UnbindKeyboardEvent(Keys.Left);
             this.UnbindKeyboardEvent(Keys.Space);
+            MediaPlayer.Stop();
+            MediaPlayer.Play(bgm);
         }
 
         protected void setupGameoverState()
         {
-            this.BindKeyboardEventListener(Keys.Enter,new keyboardEventListener(Curry(changeState, GameState.main)));
+            this.BindKeyboardEventListener(Keys.Enter,new keyboardEventListener(() => changeState(GameState.main)));
+            gameOver.Initialize();
         }
 
         protected void teardownGameoverState()

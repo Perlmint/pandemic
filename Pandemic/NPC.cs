@@ -17,7 +17,7 @@ namespace Pandemic
     {
         public enum State
         {
-            alive, almost_dead, dead
+            alive, almost_dead, dead, absolute
         };
         Vector2 destination;
         const float Speed = 1.0f;
@@ -28,6 +28,8 @@ namespace Pandemic
 
         float corpseTimer;
         const float CorpseTimeOut = 3.0f;
+        float absoluteTimer;
+        const float absoluteTimeOut = 0.5f;
 
         static Random randomGenerator = new Random();
 
@@ -51,14 +53,6 @@ namespace Pandemic
             destination = dst;
         }
 
-        public override Rectangle GetRectangle()
-        {
-            if (!isAlive || state == State.dead)
-                return new Rectangle();
-            else
-                return rect;
-        }
-
         public override void Update(float elapsedGameTime)
         {
             //throw new NotImplementedException();
@@ -68,25 +62,26 @@ namespace Pandemic
                 switch (state)
                 {
                     case State.alive:
-                        Vector2 temp = destination - position;
-                        if (temp.Length() > 100)
                         {
-                            temp += new Vector2((float)(randomGenerator.NextDouble() - 0.5) * 100);
+                            Vector2 temp = destination - position;
+                            if (temp.Length() > 100)
+                            {
+                                temp += new Vector2((float)(randomGenerator.NextDouble() - 0.5) * 100);
+                            }
+
+                            position += Vector2.Normalize(temp) * Speed;
+
+                            if (hp < 0)
+                            {
+                                corpseTimer = 0;
+                                state = State.dead;
+                            }
+
+                            rect.X = (int)position.X;
+                            rect.Y = (int)position.Y;
+                            rect.Width = RectSize;
+                            rect.Height = RectSize;
                         }
-
-                        position += Vector2.Normalize(temp) * Speed;
-
-                        if (hp < 0)
-                        {
-                            corpseTimer = 0;
-                            state = State.dead;
-                        }
-
-                        rect.X = (int)position.X;
-                        rect.Y = (int)position.Y;
-                        rect.Width = RectSize;
-                        rect.Height = RectSize;
-
                         break;
                     case State.almost_dead:
                         break;
@@ -95,28 +90,66 @@ namespace Pandemic
                         if (corpseTimer >= CorpseTimeOut)
                             isAlive = false;
                         break;
+                    case State.absolute:
+                        {
+                            absoluteTimer += elapsedGameTime;
+                            if (absoluteTimer >= absoluteTimeOut)
+                            {
+                                state = State.alive;
+                            }
+
+                            Vector2 temp = destination - position;
+
+                            if (temp.Length() > 100)
+                            {
+                                temp += new Vector2((float)(randomGenerator.NextDouble() - 0.5) * 100);
+                            }
+
+                            position += Vector2.Normalize(temp) * Speed;
+
+                            if (hp < 0)
+                            {
+                                corpseTimer = 0;
+                                state = State.dead;
+                            }
+
+                            rect.X = (int)position.X;
+                            rect.Y = (int)position.Y;
+                            rect.Width = RectSize;
+                            rect.Height = RectSize;
+                        }
+                        break;
                 }
             }
         }
 
         public void CheckBulletCollision(Bullet[] bullets)
         {
+            if (state == State.absolute)
+                return;
+
             HashSet<Rectangle> hashSet;
             foreach (Bullet bullet in bullets)
             {
                 if (bullet.IsAlive())
                 {
-                    if (bullet.Intersects(this.GetRectangle()))
+                    if (bullet.CollidesWith(this))
                     {
                         this.AccHP(-bullet.GetDamageValue());
                         bullet.Explode();
+                        state = State.absolute;
+                        return;
                     }
                     hashSet = bullet.GetEffectRectangle();
 
                     foreach (Rectangle rectangle in hashSet)
                     {
-                        if (bullet.Intersects(rectangle))
+                        if (rect.Intersects(rectangle))
+                        {
                             this.AccHP(-bullet.GetDamageValue());
+                            state = State.absolute;
+                            return;
+                        }
                     }
                 }
             }
@@ -126,18 +159,21 @@ namespace Pandemic
         {
             get
             {
+                Texture2D ret = null;
                 if (this.isAlive)
                 {
                     switch (state)
                     {
                         case State.alive:
-                            return tex;
+                        case State.absolute:
+                            ret = tex;
                             break;
                         case State.dead:
-                            return dead;
+                            ret = dead;
+                            break;
                     }
                 }
-                return null;
+                return ret;
             }
         }
 
@@ -148,6 +184,7 @@ namespace Pandemic
                 switch (state)
                 {
                     case State.alive:
+                    case State.absolute:
                         //base.Draw(spriteBatch);
                         spriteBatch.Draw(tex, rect, Color.White);
                         break;
