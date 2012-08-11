@@ -27,7 +27,7 @@ namespace Pandemic
 
         public void LoadContent(ContentManager Content)
         {
-            tex = Content.Load<Texture2D>("gameover");
+            tex = Content.Load<Texture2D>("GameOver\\GameOver");
         }
 
         public void Update(float elapsedGameTime)

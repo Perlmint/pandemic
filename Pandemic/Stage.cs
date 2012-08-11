@@ -188,7 +188,7 @@ namespace Pandemic
                     {1,1,1,1,2},
                     {0,1,1,1,1},
                     {0,0,0,0,1}},
-                    Cooldown = 1.5f,
+                    Cooldown = 0.5f,
                     range = 1,
                     EffectTimeOut = 0.1f
                 }},

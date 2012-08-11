@@ -138,7 +138,7 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
                     player.Update(elapsedTime);
 
                     npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
-                    //player.NPCCollision(npcManager.NPCs);
+                    player.NPCCollision(npcManager.NPCs);
 
                     break;
                 case GameState.gameover:
