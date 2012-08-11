@@ -103,7 +103,30 @@ namespace Pandemic
             {
                 PlayerArmed = new Dictionary<string, RedirectiveTextures>() {
                     {"basic", new RedirectiveTextures("player") { 
-                    {PlayerDirection.up, "dagger-up"}
+                    {PlayerDirection.up, "Character\\dagger\\dagger-up"},
+                    {PlayerDirection.down, "Character\\dagger\\dagger-down"},
+                    {PlayerDirection.right, "Character\\dagger\\dagger-right"},
+                    {PlayerDirection.left, "Character\\dagger\\dagger-left"}
+                    /*
+                    {"gatling", new RedirectiveTextures("player") {{PlayerDirection.up, "Character\\gatling\\machine gun-up"},
+                    {PlayerDirection.down, "Character\\gatling\\machine gun-down"},
+                    {PlayerDirection.right, "Character\\gatling\\machine gun-right"},
+                    {PlayerDirection.left, "Character\\gatling\\machine gun-left"},
+
+                    {PlayerDirection.up, "Character\\rpg\\rpg-up"},
+                    {PlayerDirection.down, "Character\\rpg\\rpg-down"},
+                    {PlayerDirection.right, "Character\\rpg\\rpg-right"},
+                    {PlayerDirection.left, "Character\\rpg\\rpg-left"},
+
+                    {PlayerDirection.up, "Character\\sword\\sword-up"},
+                    {PlayerDirection.down, "Character\\sword\\sword-down"},
+                    {PlayerDirection.right, "Character\\sword\\sword-right"},
+                    {PlayerDirection.left, "Character\\sword\\sword-left"},
+
+                    {PlayerDirection.up, "Character\\sword\\sword-up"},
+                    {PlayerDirection.down, "Character\\sword\\sword-down"},
+                    {PlayerDirection.right, "Character\\sword\\sword-right"},
+                    {PlayerDirection.left, "Character\\sword\\sword-left"},*/
                     } }
                 },
                 Player_Death = "player_death",

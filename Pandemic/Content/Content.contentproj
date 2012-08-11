@@ -332,26 +332,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Character\handgun\trash\단총-상.png">
-      <Name>단총-상</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Character\handgun\trash\단총-우%28%29.png">
-      <Name>단총-우%28%29</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Character\handgun\trash\단총-좌.png">
-      <Name>단총-좌</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Character\handgun\trash\단총-하%28%29.png">
-      <Name>단총-하%28%29</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Character\rpg\rpg-down.png">
       <Name>rpg-down</Name>
       <Importer>TextureImporter</Importer>
@@ -424,16 +404,6 @@
     </Compile>
     <Compile Include="Character\sword\swordeff.png">
       <Name>swordeff</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Character\sword\trash\장검-좌.png">
-      <Name>장검-좌</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Character\sword\trash\장검-하.png">
-      <Name>장검-하</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
