@@ -18,6 +18,8 @@ namespace Pandemic
 
         List<NPC> NPCList;
 
+        public List<NPC> NPCs { get { return NPCList; } }
+
         Random randomGenerator;
 
         protected NPCManager()

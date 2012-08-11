@@ -122,6 +122,25 @@ namespace Pandemic
             }
         }
 
+        protected override Texture2D currentTexture
+        {
+            get
+            {
+                if (this.isAlive)
+                {
+                    switch (state)
+                    {
+                        case State.alive:
+                            return tex;
+                            break;
+                        case State.dead:
+                            return dead;
+                    }
+                }
+                return null;
+            }
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (IsAlive())
