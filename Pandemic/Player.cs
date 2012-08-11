@@ -87,12 +87,15 @@ namespace Pandemic
         {
             base.Initialize();
 
-            game.BindKeyboardEventListener(Keys.Up, this.MoveUp);
-            game.BindKeyboardEventListener(Keys.Down, this.MoveDown);
-            game.BindKeyboardEventListener(Keys.Right, this.MoveRight);
-            game.BindKeyboardEventListener(Keys.Left, this.MoveLeft);
+            game.BindKeyboardEventListener(Keys.W, this.MoveUp);
+            game.BindKeyboardEventListener(Keys.S, this.MoveDown);
+            game.BindKeyboardEventListener(Keys.D, this.MoveRight);
+            game.BindKeyboardEventListener(Keys.A, this.MoveLeft);
 
-            game.BindKeyboardEventListener(Keys.Space, this.Fire);
+            game.BindKeyboardEventListener(Keys.Left, () => { ChangeDirection(Direction.left); this.Fire(); });
+            game.BindKeyboardEventListener(Keys.Right, () => { ChangeDirection(Direction.right); this.Fire(); });
+            game.BindKeyboardEventListener(Keys.Up, () => { ChangeDirection(Direction.up); this.Fire(); });
+            game.BindKeyboardEventListener(Keys.Down, () => { ChangeDirection(Direction.down); this.Fire(); });
 
             direction = Direction.right;
         }
@@ -178,25 +181,21 @@ namespace Pandemic
         void MoveUp()
         {
             position.Y -= Speed;
-            ChangeDirection(Direction.up);
         }
 
         void MoveDown()
         {
             position.Y += Speed;
-            ChangeDirection(Direction.down);
         }
 
         void MoveLeft()
         {
             position.X -= Speed;
-            ChangeDirection(Direction.left);
         }
 
         void MoveRight()
         {
             position.X += Speed;
-            ChangeDirection(Direction.right);
         }
 
         void ChangeDirection(Direction newDirection)
