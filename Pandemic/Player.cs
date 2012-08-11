@@ -17,17 +17,23 @@ namespace Pandemic
     {
         public enum State
         {
-            alive, almost_dead, dead, bullet
+            alive, almost_dead, dead
         };
         const float Speed = 3.0f;
         const int MaxHP = 100;
         const int MaxBullet = 50;
+        const int RectSize = 30;
         Texture2D dead;
 
         float atkCooldown;
 
         Weapon weapon;
         Bullet[] bullets;
+
+        State state;
+
+        float corpseTimer;
+        const float corpseTimeOut = 5.0f;
 
         public Player()
         {
@@ -38,12 +44,12 @@ namespace Pandemic
                               {1,2,1},
                               {1,1,1}
                           };
-            weapon = new Weapon(100, area, 0.5f);
+            weapon = new Weapon(100, area, 0.5f, 100);
             bullets = new Bullet[MaxBullet];
 
             for(i = 0; i < MaxBullet; i++)
             {
-                bullets[i] = new Bullet();
+                bullets[i] = Bullet.newBasicBullet(weapon.GetDamage());
             }
         }
 
@@ -57,6 +63,11 @@ namespace Pandemic
             //{
                 //bullet.LoadContent(Content, path[State.bullet]);
             //}
+        }
+
+        public Bullet[] GetBulletArray()
+        {
+            return bullets;
         }
 
         public void Initialize(Game1 game)
@@ -75,15 +86,41 @@ namespace Pandemic
             hp = MaxHP;
             base.Spawn(pos);
             atkCooldown = 0;
+            state = State.alive;
         }
 
         public override void Update(float elapsedGameTime)
         {
-            foreach (Bullet bullet in bullets)
-                bullet.Update(elapsedGameTime);
+            switch (state)
+            {
+                case State.alive:
+                    foreach (Bullet bullet in bullets)
+                        bullet.Update(elapsedGameTime);
 
-            if (atkCooldown > 0)
-                atkCooldown -= elapsedGameTime;
+                    if (atkCooldown > 0)
+                        atkCooldown -= elapsedGameTime;
+                    if (hp <= 0)
+                    {
+                        state = State.dead;
+                        corpseTimer = 0;
+                    }
+
+                    rect.X = (int)position.X;
+                    rect.Y = (int)position.Y;
+                    rect.Width = RectSize;
+                    rect.Height = RectSize;
+
+                    break;
+                case State.almost_dead:
+                    break;
+                case State.dead:
+                    corpseTimer += elapsedGameTime;
+                    if (corpseTimer >= corpseTimeOut)
+                    {
+                        isAlive = false;
+                    }
+                    break;
+            }
         }
 
         void MoveUp()
@@ -106,7 +143,7 @@ namespace Pandemic
             position.X += Speed;
         }
 
-        public void Fire()
+        void Fire()
         {
             if (atkCooldown <= 0)
             {
@@ -135,11 +172,17 @@ namespace Pandemic
         {
             if (IsAlive())
             {
-                base.Draw(spriteBatch);
-            }
-            else
-            {
-                spriteBatch.Draw(dead, position, Color.White);
+                switch (state)
+                {
+                    case State.alive:
+                        base.Draw(spriteBatch);
+                        break;
+                    case State.dead:
+                        spriteBatch.Draw(dead, rect, Color.White);
+                        break;
+                    case State.almost_dead:
+                        break;
+                }
             }
 
             foreach (Bullet bullet in bullets)

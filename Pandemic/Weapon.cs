@@ -17,33 +17,51 @@ namespace Pandemic
     {
         int range;
         int[,] atkArea;
-        Point position;
+        Vector2 position;
 
         float atkCooldown;
 
         Texture2D bulletTex;
         Texture2D effectTex;
+        Texture2D tileTex;
 
-        public Weapon(int weaponRange, int[,] attackArea, float cooldown)
+        int damage;
+
+        bool alive;
+
+        public Weapon(int weaponRange, int[,] attackArea, float cooldown, int dmg)
         {
             range = weaponRange;
             atkArea = attackArea;
             atkCooldown = cooldown;
+            damage = dmg;
         }
 
         public void Initialize()
         {
         }
 
+        public void Spawn(Vector2 pos)
+        {
+            position = pos;
+            alive = true;
+        }
+
         public void LoadContent(ContentManager Content)
         {
             bulletTex = Content.Load<Texture2D>("bullet");
             effectTex = Content.Load<Texture2D>("effect");
+            // Load Tile Tex
         }
 
         public float GetCooldown()
         {
             return atkCooldown;
+        }
+
+        public int GetDamage()
+        {
+            return damage;
         }
 
         public Texture2D GetBulletTex()
@@ -56,11 +74,6 @@ namespace Pandemic
             return effectTex;
         }
 
-        public void Spawn(Point pos)
-        {
-            position = pos;
-        }
-
         public int[,] GetArea()
         {
             return atkArea;
@@ -69,6 +82,14 @@ namespace Pandemic
         public int GetRange()
         {
             return range;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            if (alive)
+            {
+                spriteBatch.Draw(tileTex, position, Color.White);
+            }
         }
     }
 }

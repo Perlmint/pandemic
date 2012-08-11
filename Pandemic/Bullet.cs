@@ -16,14 +16,27 @@ namespace Pandemic
     class Bullet : GameObject
     {
         Vector2 destination;
-        const float Speed = 3.0f;
+        float Speed;
         float displacement;
         float range;
+        int damage;
+        int RectSize;
         int[,] effectArea;
         Point bulletPos;
 
         float explodeTimeout;
-        const float TimeOut = 1.0f;
+        float TimeOut;
+
+        public static Bullet newBasicBullet(int dmg)
+        {
+            return new Bullet()
+            {
+                Speed = 3.0f,
+                RectSize = 30,
+                TimeOut = 1.0f,
+                damage = dmg
+            };
+        }
 
         enum BulletState
         {
@@ -85,6 +98,11 @@ namespace Pandemic
                     {
                         Explode();
                     }
+
+                    rect.X = (int)position.X;
+                    rect.Y = (int)position.Y;
+                    rect.Width = RectSize;
+                    rect.Height = RectSize;
                     break;
                 case BulletState.Explosion:
                     explodeTimeout += elapsedGameTime;
@@ -94,6 +112,36 @@ namespace Pandemic
                     }
                     break;
             }
+        }
+
+        public int GetDamageValue()
+        {
+            return damage;
+        }
+
+        public HashSet<Rectangle> GetEffectRectangle()
+        {
+            HashSet<Rectangle> rectHashSet = new HashSet<Rectangle>();
+            int i, j;
+
+
+            if (state == BulletState.Explosion)
+            {
+                for (i = 0; i < (effectArea.Rank + 1); i++)
+                {
+                    for (j = 0; j < effectArea.Length / (effectArea.Rank + 1); j++)
+                    {
+                        if (effectArea[i, j] == 1)
+                        {
+                            rectHashSet.Add(new Rectangle((i - bulletPos.X) * RectSize + rect.X,
+                                (j - bulletPos.Y) * RectSize + rect.Y,
+                                RectSize, RectSize));
+                        }
+                    }
+                }
+            }
+
+            return rectHashSet;
         }
 
         public void Explode()
@@ -114,12 +162,16 @@ namespace Pandemic
                         break;
                     case BulletState.Explosion:
                         int i, j;
+                        Rectangle effectRect = new Rectangle(0, 0, RectSize, RectSize);
 
                         for (i = 0; i < (effectArea.Rank + 1); i++)
                         {
                             for (j = 0; j < effectArea.Length / (effectArea.Rank + 1); j++)
                             {
-                                spriteBatch.Draw(effectTex, position + new Vector2(30 * (i - bulletPos.X), 30 * (j - bulletPos.Y)), Color.White);
+                                //spriteBatch.Draw(effectTex, position + new Vector2(30 * (i - bulletPos.X), 30 * (j - bulletPos.Y)), Color.White);
+                                effectRect.X = RectSize * (i - bulletPos.X) + rect.X;
+                                effectRect.Y = RectSize * (j - bulletPos.Y) + rect.Y;
+                                spriteBatch.Draw(effectTex, effectRect, Color.White);
                             }
                         }
                         break;

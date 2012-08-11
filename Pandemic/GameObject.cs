@@ -24,6 +24,7 @@ namespace Pandemic
         public GameObject()
         {
             isAlive = false;
+            rect = new Rectangle();
         }
 
         public virtual void Initialize()
@@ -41,13 +42,33 @@ namespace Pandemic
             isAlive = true;
         }
 
-        public abstract void Update(float elapsedGameTime);
+        public void AccHP(int value)
+        {
+            hp += value;
+        }
 
+        public Rectangle GetRectangle()
+        {
+            return rect;
+        }
+
+        private bool Intersects(GameObject gameObject)
+        {
+            return this.rect.Intersects(gameObject.GetRectangle());
+        }
+
+        public bool Intersects(Rectangle rectangle)
+        {
+            return this.rect.Intersects(rectangle);
+        }
+
+        public abstract void Update(float elapsedGameTime);
+        
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (isAlive)
             {
-                spriteBatch.Draw(tex, position, Color.White);
+                spriteBatch.Draw(tex, rect, Color.White);
             }
         }
 

@@ -86,7 +86,6 @@ namespace Pandemic
             Dictionary<Player.State, string> pathDic = new Dictionary<Player.State,string>();
             pathDic.Add(Player.State.alive, "player");
             pathDic.Add(Player.State.dead, "player");
-            pathDic.Add(Player.State.bullet, "bullet");
 
             Dictionary<NPC.State, string> pathDicNPC = new Dictionary<NPC.State, string>();
             pathDicNPC.Add(NPC.State.alive, "player");
@@ -124,6 +123,7 @@ namespace Pandemic
 
             npc.SetDestination(player.GetPosition());
             npc.Update(elapsedTime);
+            npc.CheckBulletCollision(player.GetBulletArray());
 
             base.Update(gameTime);
         }
