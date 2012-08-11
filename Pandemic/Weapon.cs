@@ -85,7 +85,7 @@ namespace Pandemic
             return range;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, ScreenManager screen)
         {
             if (alive)
             {

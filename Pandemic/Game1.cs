@@ -21,7 +21,7 @@ namespace Pandemic
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
-Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
+        Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
         ScreenManager screenManager;
         GameState state;
@@ -240,8 +240,9 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
                     mainMenu.Draw(spriteBatch);
                     break;
                 case GameState.play:
-                    npcManager.Draw(spriteBatch);
-                    player.Draw(spriteBatch);
+                    map.Draw(spriteBatch, screenManager);
+                    npcManager.Draw(spriteBatch, screenManager);
+                    player.Draw(spriteBatch, screenManager);
                     break;
                 case GameState.gameover:
 

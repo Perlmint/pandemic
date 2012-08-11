@@ -74,11 +74,11 @@ namespace Pandemic
             NPCList.RemoveAll(npc => !npc.IsAlive());
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, ScreenManager screen)
         {
             foreach (NPC npc in NPCList)
             {
-                npc.Draw(spriteBatch);
+                npc.Draw(spriteBatch, screen);
             }
         }
 

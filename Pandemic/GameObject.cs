@@ -137,7 +137,7 @@ namespace Pandemic
 
         public abstract void Update(float elapsedGameTime);
         
-        public abstract void Draw(SpriteBatch spriteBatch);
+        public abstract void Draw(SpriteBatch spriteBatch, ScreenManager screen);
 
         public bool IsAlive()
         {

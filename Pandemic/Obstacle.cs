@@ -16,16 +16,26 @@ namespace Pandemic
 {
     class Obstacle : GameObject
     {
+        Vector2 position;
+        string texpath;
+        Texture2D tex;
+        public Obstacle(Vector2 position, string texpath)
+        {
+            this.position = position;
+            this.texpath = texpath;
+        }
+
         public override void Update(float elapsedGameTime)
         {
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch, ScreenManager screen)
         {
         }
 
         public override void LoadContent(ContentManager Content)
         {
+            tex = Content.Load<Texture2D>(texpath);
         }
     }
 }

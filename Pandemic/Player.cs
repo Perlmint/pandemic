@@ -250,6 +250,7 @@ namespace Pandemic
         public Vector2 GetPosition()
         {
             return position;
+<<<<<<< HEAD
         }
 
         protected override Texture2D currentTexture
@@ -278,6 +279,11 @@ namespace Pandemic
         }
 
         public override void Draw(SpriteBatch spriteBatch)
+=======
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, ScreenManager screen)
+>>>>>>> Eon
         {
             if (IsAlive())
             {
@@ -299,7 +305,7 @@ namespace Pandemic
             }
 
             foreach (Bullet bullet in bullets)
-                bullet.Draw(spriteBatch);
+                bullet.Draw(spriteBatch, screen);
 
             for (int i = 0; i < hp; i++)
             {

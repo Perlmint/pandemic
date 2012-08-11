@@ -120,6 +120,7 @@ namespace Pandemic
                     }
                 }
             }
+<<<<<<< HEAD
         }
 
         protected override Texture2D currentTexture
@@ -142,6 +143,11 @@ namespace Pandemic
         }
 
         public override void Draw(SpriteBatch spriteBatch)
+=======
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, ScreenManager screen)
+>>>>>>> Eon
         {
             if (IsAlive())
             {
