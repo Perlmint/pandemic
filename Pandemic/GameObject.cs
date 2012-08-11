@@ -44,9 +44,12 @@ namespace Pandemic
             hp += value;
         }
 
-        public Rectangle GetRectangle()
+        public virtual Rectangle GetRectangle()
         {
-            return rect;
+            if (isAlive)
+                return rect;
+            else
+                return new Rectangle();
         }
 
         private bool Intersects(GameObject gameObject)

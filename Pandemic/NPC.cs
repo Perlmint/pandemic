@@ -27,7 +27,7 @@ namespace Pandemic
         const int RectSize = 30;
 
         float corpseTimer;
-        const float CorpseTimeOut = 5.0f;
+        const float CorpseTimeOut = 3.0f;
 
         State state;
 
@@ -47,6 +47,14 @@ namespace Pandemic
         public void SetDestination(Vector2 dst)
         {
             destination = dst;
+        }
+
+        public override Rectangle GetRectangle()
+        {
+            if (!isAlive || state == State.dead)
+                return new Rectangle();
+            else
+                return rect;
         }
 
         public override void Update(float elapsedGameTime)
@@ -93,6 +101,7 @@ namespace Pandemic
                     if (bullet.Intersects(this.GetRectangle()))
                     {
                         this.AccHP(-bullet.GetDamageValue());
+                        bullet.Explode();
                     }
                     hashSet = bullet.GetEffectRectangle();
 
