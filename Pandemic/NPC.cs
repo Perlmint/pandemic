@@ -115,7 +115,7 @@ namespace Pandemic
 
                     foreach (Rectangle rectangle in hashSet)
                     {
-                        if (bullet.Intersects(rectangle))
+                        if (rect.Intersects(rectangle))
                             this.AccHP(-bullet.GetDamageValue());
                     }
                 }

@@ -25,7 +25,7 @@ namespace Pandemic
             left, right, up, down
         };
 
-        const float Speed = 3.0f;
+        const float Speed = 2.0f;
         const int MaxHP = 5;
         const int MaxBullet = 50;
         const int RectSize = 30;
@@ -56,13 +56,13 @@ namespace Pandemic
                               {1,1,1}
                           };
             game = paramGame;
-            weapon = new Weapon(100, area, 0.5f, 100);
+            weapon = new Weapon("sword");
 
             bullets = new Bullet[MaxBullet];
 
             for (i = 0; i < MaxBullet; i++)
             {
-                bullets[i] = Bullet.newBasicBullet(weapon.GetDamage());
+                bullets[i] = Bullet.newBasicBullet(weapon.GetDamage(), weapon.GetEffectTimeOut());
             }
         }
 
@@ -107,11 +107,6 @@ namespace Pandemic
             switch (state)
             {
                 case State.alive:
-                    foreach (Bullet bullet in bullets)
-                        bullet.Update(elapsedGameTime);
-
-                    if (atkCooldown > 0)
-                        atkCooldown -= elapsedGameTime;
                     
                     rect.X = (int)position.X;
                     rect.Y = (int)position.Y;
@@ -143,6 +138,12 @@ namespace Pandemic
 
             if (!isAlive)
                 game.GameOver();
+
+            foreach (Bullet bullet in bullets)
+                bullet.Update(elapsedGameTime);
+
+            if (atkCooldown > 0)
+                atkCooldown -= elapsedGameTime;
         }
 
        public void NPCCollision(List<Rectangle> rectList)
@@ -205,7 +206,7 @@ namespace Pandemic
 
         void Fire()
         {
-            if (atkCooldown <= 0)
+            if (atkCooldown <= 0 && state != State.dead)
             {
                 int i = 0;
 
@@ -219,15 +220,19 @@ namespace Pandemic
                     {
                         case Direction.up:
                             bulletDirection = new Vector2(0, weapon.GetRange());
+                            bullets[i].SetEffectArea(weapon.GetAreaUp());
                             break;
                         case Direction.down:
                             bulletDirection = new Vector2(0, -weapon.GetRange());
+                            bullets[i].SetEffectArea(weapon.GetAreaDown());
                             break;
                         case Direction.left:
                             bulletDirection = new Vector2(weapon.GetRange(), 0);
+                            bullets[i].SetEffectArea(weapon.GetAreaLeft());
                             break;
                         case Direction.right:
                             bulletDirection = new Vector2(-weapon.GetRange(),0);
+                            bullets[i].SetEffectArea(weapon.GetAreaRight());
                             break;
                         default:
                             bulletDirection = new Vector2();
@@ -244,7 +249,7 @@ namespace Pandemic
         {
             weapon = wpn;
             Bullet.SetTexture(weapon.GetBulletTex(), weapon.GetEffectTex());
-            Bullet.SetEffectArea(weapon.GetArea());
+            //Bullet.SetEffectArea(weapon.GetArea);
         }
 
         public Vector2 GetPosition()

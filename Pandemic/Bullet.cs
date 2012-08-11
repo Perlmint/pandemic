@@ -22,8 +22,10 @@ namespace Pandemic
         int damage;
         int effectDamage;
         int RectSize;
-        static int[,] effectArea;
-        static Point bulletPos;
+
+        int[,] effectArea;
+        Point bulletPos;
+        
 
         float explodeTimeout;
         float TimeOut;
@@ -39,13 +41,13 @@ namespace Pandemic
         static Texture2D effectTex;
         static Texture2D tex;
 
-        public static Bullet newBasicBullet(int dmg)
+        public static Bullet newBasicBullet(int dmg, float timeOut)
         {
             return new Bullet()
             {
-                Speed = 3.0f,
+                Speed = 4.0f,
                 RectSize = 30,
-                TimeOut = 1.0f,
+                TimeOut = timeOut,
                 damage = dmg
             };
         }
@@ -77,18 +79,21 @@ namespace Pandemic
             range = (dst - position).Length();
         }
 
-        public static void SetEffectArea(int[,] area)
+        public void SetEffectArea(int[,] area)
         {
             int i, j;
 
             effectArea = area;
 
-            for (i = 0; i < (effectArea.Rank + 1); i++)
+            for (i = 0; i < Math.Sqrt(effectArea.Length); i++)
             {
-                for (j = 0; j < effectArea.Length / (effectArea.Rank + 1); j++)
+                for (j = 0; j < Math.Sqrt(effectArea.Length); j++)
                 {
                     if (area[i, j] == 2)
+                    {
                         bulletPos = new Point(i, j);
+                        return;
+                    }
                 }
             }
         }
@@ -134,9 +139,9 @@ namespace Pandemic
 
             if (state == BulletState.Explosion)
             {
-                for (i = 0; i < (effectArea.Rank + 1); i++)
+                for (i = 0; i < Math.Sqrt(effectArea.Length); i++)
                 {
-                    for (j = 0; j < effectArea.Length / (effectArea.Rank + 1); j++)
+                    for (j = 0; j < Math.Sqrt(effectArea.Length); j++)
                     {
                         if (effectArea[i, j] == 1)
                         {
@@ -171,14 +176,16 @@ namespace Pandemic
                         int i, j;
                         Rectangle effectRect = new Rectangle(0, 0, RectSize, RectSize);
 
-                        for (i = 0; i < (effectArea.Rank + 1); i++)
+                        for (i = 0; i < Math.Sqrt(effectArea.Length); i++)
                         {
-                            for (j = 0; j < effectArea.Length / (effectArea.Rank + 1); j++)
+                            for (j = 0; j < Math.Sqrt(effectArea.Length); j++)
                             {
-                                //spriteBatch.Draw(effectTex, position + new Vector2(30 * (i - bulletPos.X), 30 * (j - bulletPos.Y)), Color.White);
-                                effectRect.X = RectSize * (i - bulletPos.X) + rect.X;
-                                effectRect.Y = RectSize * (j - bulletPos.Y) + rect.Y;
-                                spriteBatch.Draw(effectTex, effectRect, Color.White);
+                                if (effectArea[i,j] == 1)
+                                {
+                                    effectRect.X = RectSize * (i - bulletPos.X) + rect.X;
+                                    effectRect.Y = RectSize * (j - bulletPos.Y) + rect.Y;
+                                    spriteBatch.Draw(effectTex, effectRect, Color.White);
+                                }
                             }
                         }
                         break;
