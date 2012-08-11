@@ -74,10 +74,10 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             player = new Player();
             player.Initialize(this);
-            player.Spawn(new Vector2(100, 100));
+            
             npc = new NPC();
             npc.Initialize();
-            npc.Spawn(new Vector2(200, 200));
+            
             base.Initialize();
         }
 
@@ -98,8 +98,8 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             pathDicNPC.Add(NPC.State.alive, "player");
             pathDicNPC.Add(NPC.State.dead, "player");
 
-            player.LoadContent(Content, pathDic);
-            npc.LoadContent(Content, pathDicNPC);
+            player.LoadContent(Content);
+            npc.LoadContent(Content);
 
             // TODO: use this.Content to load your game content here
         }
@@ -126,11 +126,21 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
             elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            player.Update(elapsedTime);
+            switch (state)
+            {
+                case GameState.main:
+                    break;
+                case GameState.play:
+                    player.Update(elapsedTime);
 
-            npc.SetDestination(player.GetPosition());
-            npc.Update(elapsedTime);
-            npc.CheckBulletCollision(player.GetBulletArray());
+                    npc.SetDestination(player.GetPosition());
+                    npc.Update(elapsedTime);
+                    npc.CheckBulletCollision(player.GetBulletArray());
+
+                    break;
+                case GameState.gameover:
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -278,7 +288,8 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
         protected void setupPlayState()
         {
-            
+            npc.Spawn(new Vector2(200, 200));
+            player.Spawn(new Vector2(100, 100));
         }
 
         protected void setupGameoverState()

@@ -23,7 +23,8 @@ namespace Pandemic
         const int MaxHP = 100;
         const int MaxBullet = 50;
         const int RectSize = 30;
-        Texture2D dead;
+        static Texture2D dead;
+        static Texture2D tex;
 
         float atkCooldown;
 
@@ -38,31 +39,26 @@ namespace Pandemic
         public Player()
         {
             int i;
-
             int[,] area = {
                               {1,1,1},
                               {1,2,1},
                               {1,1,1}
                           };
             weapon = new Weapon(100, area, 0.5f, 100);
+
             bullets = new Bullet[MaxBullet];
 
-            for(i = 0; i < MaxBullet; i++)
+            for (i = 0; i < MaxBullet; i++)
             {
                 bullets[i] = Bullet.newBasicBullet(weapon.GetDamage());
             }
         }
 
-        public void LoadContent(ContentManager Content, Dictionary<State, string> path)
+        public override void LoadContent(ContentManager Content)
         {
-            base.LoadContent(Content, path[State.alive]);
-            dead = Content.Load<Texture2D>(path[State.dead]);
+            tex = Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["basic"].DefaultTexture);
+            dead = Content.Load<Texture2D>(Stage.stageInstance.Units.Player_Death);
             weapon.LoadContent(Content);
-
-            //foreach (Bullet bullet in bullets)
-            //{
-                //bullet.LoadContent(Content, path[State.bullet]);
-            //}
         }
 
         public Bullet[] GetBulletArray()
@@ -87,6 +83,7 @@ namespace Pandemic
             base.Spawn(pos);
             atkCooldown = 0;
             state = State.alive;
+            GetWeapon(weapon);
         }
 
         public override void Update(float elapsedGameTime)
@@ -164,12 +161,8 @@ namespace Pandemic
         public void GetWeapon(Weapon wpn)
         {
             weapon = wpn;
-
-            foreach (Bullet bullet in bullets)
-            {
-                bullet.SetTexture(weapon.GetBulletTex(), weapon.GetEffectTex());
-                bullet.SetEffectArea(weapon.GetArea());
-            }
+            Bullet.SetTexture(weapon.GetBulletTex(), weapon.GetEffectTex());
+            Bullet.SetEffectArea(weapon.GetArea());
         }
 
         public Vector2 GetPosition()
@@ -184,7 +177,8 @@ namespace Pandemic
                 switch (state)
                 {
                     case State.alive:
-                        base.Draw(spriteBatch);
+                        //base.Draw(spriteBatch);
+                        spriteBatch.Draw(tex, rect, Color.White);
                         break;
                     case State.dead:
                         spriteBatch.Draw(dead, rect, Color.White);

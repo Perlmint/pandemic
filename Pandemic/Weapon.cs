@@ -49,8 +49,8 @@ namespace Pandemic
 
         public void LoadContent(ContentManager Content)
         {
-            bulletTex = Content.Load<Texture2D>("bullet");
-            effectTex = Content.Load<Texture2D>("effect");
+            bulletTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Bullet["basic"].DefaultTexture);
+            effectTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Effect["basic"][0]);
             // Load Tile Tex
         }
 

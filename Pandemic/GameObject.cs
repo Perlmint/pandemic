@@ -18,7 +18,7 @@ namespace Pandemic
         protected Vector2 position;
         protected Rectangle rect;
         protected int hp;
-        protected Texture2D tex;
+        //protected Texture2D tex;
         protected bool isAlive;
 
         public GameObject()
@@ -31,10 +31,7 @@ namespace Pandemic
         {
         }
 
-        public virtual void LoadContent(ContentManager Content, string path)
-        {
-            tex = Content.Load<Texture2D>(path);
-        }
+        public abstract void LoadContent(ContentManager Content);
 
         public virtual void Spawn(Vector2 pos)
         {
@@ -64,13 +61,7 @@ namespace Pandemic
 
         public abstract void Update(float elapsedGameTime);
         
-        public virtual void Draw(SpriteBatch spriteBatch)
-        {
-            if (isAlive)
-            {
-                spriteBatch.Draw(tex, rect, Color.White);
-            }
-        }
+        public abstract void Draw(SpriteBatch spriteBatch);
 
         public bool IsAlive()
         {
