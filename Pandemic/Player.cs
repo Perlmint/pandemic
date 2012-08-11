@@ -38,16 +38,16 @@ namespace Pandemic
         public Player()
         {
             int i;
-
             int[,] area = {
                               {1,1,1},
                               {1,2,1},
                               {1,1,1}
                           };
             weapon = new Weapon(100, area, 0.5f, 100);
+
             bullets = new Bullet[MaxBullet];
 
-            for(i = 0; i < MaxBullet; i++)
+            for (i = 0; i < MaxBullet; i++)
             {
                 bullets[i] = Bullet.newBasicBullet(weapon.GetDamage());
             }
@@ -87,6 +87,7 @@ namespace Pandemic
             base.Spawn(pos);
             atkCooldown = 0;
             state = State.alive;
+            GetWeapon(weapon);
         }
 
         public override void Update(float elapsedGameTime)

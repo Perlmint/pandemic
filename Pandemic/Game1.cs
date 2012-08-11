@@ -67,10 +67,10 @@ namespace Pandemic
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             player = new Player();
             player.Initialize(this);
-            player.Spawn(new Vector2(100, 100));
+            
             npc = new NPC();
             npc.Initialize();
-            npc.Spawn(new Vector2(200, 200));
+            
             base.Initialize();
         }
 
@@ -119,11 +119,21 @@ namespace Pandemic
 
             elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            player.Update(elapsedTime);
+            switch (state)
+            {
+                case GameState.main:
+                    break;
+                case GameState.play:
+                    player.Update(elapsedTime);
 
-            npc.SetDestination(player.GetPosition());
-            npc.Update(elapsedTime);
-            npc.CheckBulletCollision(player.GetBulletArray());
+                    npc.SetDestination(player.GetPosition());
+                    npc.Update(elapsedTime);
+                    npc.CheckBulletCollision(player.GetBulletArray());
+
+                    break;
+                case GameState.gameover:
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -271,7 +281,8 @@ namespace Pandemic
 
         protected void setupPlayState()
         {
-            
+            npc.Spawn(new Vector2(200, 200));
+            player.Spawn(new Vector2(100, 100));
         }
 
         protected void setupGameoverState()
