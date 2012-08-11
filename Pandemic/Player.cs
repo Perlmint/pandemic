@@ -11,21 +11,10 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-using System.Runtime.InteropServices;
-using System.Diagnostics;
-
 namespace Pandemic
 {
     class Player : GameObject
     {
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern uint MessageBox(IntPtr hWnt, String text, String caption, uint type);
-        [Conditional("DEBUG")]
-        public void ShowMessageBox(String text)
-        {
-            MessageBox(new IntPtr(0), text, "", 0);
-        }
-
         public enum State
         {
             alive, almost_dead, dead
@@ -82,12 +71,16 @@ namespace Pandemic
         void MoveRight()
         {
             position.X += Speed;
-            ShowMessageBox(position.X.ToString());
         }
 
         public void Fire()
         {
 
+        }
+
+        public Vector2 GetPosition()
+        {
+            return position;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
