@@ -53,14 +53,6 @@ namespace Pandemic
             destination = dst;
         }
 
-        public override Rectangle GetRectangle()
-        {
-            if (!isAlive || state == State.dead)
-                return new Rectangle();
-            else
-                return rect;
-        }
-
         public override void Update(float elapsedGameTime)
         {
             //throw new NotImplementedException();
