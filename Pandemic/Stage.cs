@@ -20,6 +20,13 @@ namespace Pandemic
     };
     public class RedirectiveTextures : Dictionary<PlayerDirection, string>
     {
+        public RedirectiveTextures()
+        {
+        }
+        public RedirectiveTextures(string def)
+        {
+            DefaultTexture = def;
+        }
         public string DefaultTexture;
         public string get(PlayerDirection key)
         {
@@ -95,7 +102,9 @@ namespace Pandemic
             Units = new UnitTextures()
             {
                 PlayerArmed = new Dictionary<string, RedirectiveTextures>() {
-                    {"basic", new RedirectiveTextures() { DefaultTexture = "player" } }
+                    {"basic", new RedirectiveTextures("player") { 
+                    {PlayerDirection.up, "dagger-up"}
+                    } }
                 },
                 Player_Death = "player_death",
                 Enemy = "enemy",

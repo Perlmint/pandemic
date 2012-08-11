@@ -107,12 +107,6 @@ namespace Pandemic
 
                             position += Vector2.Normalize(temp) * Speed;
 
-                            if (hp < 0)
-                            {
-                                corpseTimer = 0;
-                                state = State.dead;
-                            }
-
                             rect.X = (int)position.X;
                             rect.Y = (int)position.Y;
                             rect.Width = RectSize;
@@ -137,7 +131,16 @@ namespace Pandemic
                     {
                         this.AccHP(-bullet.GetDamageValue());
                         bullet.Explode();
-                        state = State.absolute;
+                        if (this.hp > 0)
+                        {
+                            state = State.absolute;
+                            absoluteTimer = 0;
+                        }
+                        else
+                        {
+                            corpseTimer = 0;
+                            state = State.dead;
+                        }
                         return;
                     }
                     hashSet = bullet.GetEffectRectangle();
@@ -147,7 +150,16 @@ namespace Pandemic
                         if (rect.Intersects(rectangle))
                         {
                             this.AccHP(-bullet.GetDamageValue());
-                            state = State.absolute;
+                            if (this.hp > 0)
+                            {
+                                state = State.absolute;
+                                absoluteTimer = 0;
+                            }
+                            else
+                            {
+                                corpseTimer = 0;
+                                state = State.dead;
+                            }
                             return;
                         }
                     }

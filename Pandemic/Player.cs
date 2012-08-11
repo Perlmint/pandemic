@@ -32,6 +32,10 @@ namespace Pandemic
         static Texture2D dead;
         static Texture2D tex;
         static Texture2D heart;
+        static Texture2D texUp;
+        static Texture2D texDown;
+        static Texture2D texLeft;
+        static Texture2D texRight;
 
         float atkCooldown;
 
