@@ -26,6 +26,7 @@ namespace Pandemic
 
         public float playTime { get { return (NPCBasicGenerationRate - 5) * 10; } }
         public UInt32 kill { get { return (UInt32)(2147483647 - numberOfRestGeneratableNPC - NPCList.Count); } }
+        public UInt32 survivor { get { return numberOfRestGeneratableNPC;  } }
 
         protected NPCManager()
         {

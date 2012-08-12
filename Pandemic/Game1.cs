@@ -35,6 +35,8 @@ namespace Pandemic
         GameOver gameOver;
         ImageDisplay help;
 
+        SpriteFont font;
+
         float elapsedTime;
 
         enum GameState
@@ -97,9 +99,11 @@ namespace Pandemic
             mainMenu.LoadContent(Content);
             gameOver.LoadContent(Content);
 
-            help.LoadContent(Content, "GameOver\\GameOver");
+            help.LoadContent(Content, "Help\\Help");
             bgm = Content.Load<Song>(Constants.MusicFolder + "\\" + Constants.BackgroundMusic);
             bgm2 = Content.Load<Song>(Constants.MusicFolder + "\\they are comming");
+
+            font = Content.Load<SpriteFont>("font");
             
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(bgm);
@@ -148,6 +152,15 @@ namespace Pandemic
 
                     break;
                 case GameState.gameover:
+                    player.Update(elapsedTime);
+                    npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
+                    player.NPCCollision(npcManager.NPCs);
+
+                    player.Move(player.expectedSpeed);//map.CalcRealDirection(player));
+                    npcManager.Move();
+
+                    player.PostUpdate();
+                    npcManager.PostUpdate();
                     gameOver.Update(elapsedTime);
                     break;
                 case GameState.help:
@@ -249,8 +262,14 @@ namespace Pandemic
                     map.Draw(spriteBatch, screenManager);
                     npcManager.Draw(spriteBatch, screenManager);
                     player.Draw(spriteBatch, screenManager);
+                    spriteBatch.DrawString(font, "LeftSurvivor : " + npcManager.survivor.ToString(), new Vector2(0, 500), Color.Black);
+                    spriteBatch.DrawString(font, "PlayTime : " + npcManager.playTime.ToString(), new Vector2(0, 530), Color.Black);
+
                     break;
                 case GameState.gameover:
+                    map.Draw(spriteBatch, screenManager);
+                    npcManager.Draw(spriteBatch, screenManager);
+                    player.Draw(spriteBatch, screenManager);
                     gameOver.Draw(spriteBatch);
                     break;
                 case GameState.help:
@@ -376,7 +395,11 @@ namespace Pandemic
         protected void setupGameoverState()
         {
             this.BindKeyboardEventListener(Keys.Enter,new keyboardEventListener(() => changeState(GameState.main)));
-            gameOver.Initialize();
+            GameOver.ResultContext result;
+
+            result.kill = npcManager.kill;
+            result.time = npcManager.playTime;
+            gameOver.Initialize(result);
         }
 
         protected void teardownGameoverState()
