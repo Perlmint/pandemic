@@ -355,6 +355,10 @@ namespace Pandemic
             this.UnbindKeyboardEvent(Keys.Down);
             this.UnbindKeyboardEvent(Keys.Right);
             this.UnbindKeyboardEvent(Keys.Left);
+            this.UnbindKeyboardEvent(Keys.W);
+            this.UnbindKeyboardEvent(Keys.A);
+            this.UnbindKeyboardEvent(Keys.S);
+            this.UnbindKeyboardEvent(Keys.D);
             this.UnbindKeyboardEvent(Keys.Space);
             MediaPlayer.Stop();
             MediaPlayer.Play(bgm);
