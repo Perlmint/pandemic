@@ -158,7 +158,7 @@ namespace Pandemic
                     npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
                     player.NPCCollision(npcManager.NPCs);
 
-                    player.Move(player.expectedSpeed);//map.CalcRealDirection(player));
+                    player.Move(map.CalcRealDirection(player));
                     npcManager.Move();
 
                     player.PostUpdate();

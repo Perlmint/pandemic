@@ -158,7 +158,9 @@ namespace Pandemic
                     {"house2", "house2"},
                     {"house3", "house3"},
                     {"house4", "house4"},
-                    {"stone", "stone"}
+                    {"stone", "stone"},
+                    {"tree1", "tree1"},
+                    {"tree2", "tree2"}
                         
                 }
             },
