@@ -59,7 +59,7 @@ namespace Pandemic
         public Player(Game1 paramGame)
         {
             int i;
-            weaponName = "rpg";
+            weaponName = "dagger";
             game = paramGame;
             weapon = new Weapon(weaponName);
 
@@ -322,6 +322,7 @@ namespace Pandemic
                     }
                     bullets[i].Spawn(position);
                     bullets[i].SetDestination(position + bulletDirection);
+                    bullets[i].SetDamage(Stage.stageInstance.WeaponSpec[weaponName].damage);
                     atkCooldown = weapon.GetCooldown();
                 }
             }
@@ -330,6 +331,7 @@ namespace Pandemic
         public void GetWeapon(Weapon wpn)
         {
             weapon = wpn;
+            weaponName = wpn.GetName();
             Bullet.SetTexture(weapon.GetBulletTex(), weapon.GetEffectTex());
             //Bullet.SetEffectArea(weapon.GetArea);
         }

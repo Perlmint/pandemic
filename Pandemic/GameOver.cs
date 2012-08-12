@@ -50,6 +50,7 @@ namespace Pandemic
             spriteBatch.Draw(tex, new Vector2(100, 100), Color.White);
             spriteBatch.DrawString(font, "Cured : " + resultContext.kill.ToString(), new Vector2(100, 400), Color.Black);
             spriteBatch.DrawString(font, "PlayTime : " + resultContext.time.ToString(), new Vector2(100, 420), Color.Black);
+            spriteBatch.DrawString(font, "Press Space to continue", new Vector2(100, 450), Color.Black);
         }
     }
 }

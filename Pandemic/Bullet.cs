@@ -79,6 +79,11 @@ namespace Pandemic
             expectedSpeed_ = Vector2.Normalize(position - destination) * Speed;
         }
 
+        public void SetDamage(int value)
+        {
+            damage = value;
+        }
+
         public void SetEffectArea(int[,] area)
         {
             int i, j;

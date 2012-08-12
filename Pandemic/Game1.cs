@@ -34,6 +34,9 @@ namespace Pandemic
         Song bgm2;
         GameOver gameOver;
         ImageDisplay help;
+        Weapon[] weaponBox;
+        string[] weaponNameSet = { "dagger", "sword", "handgun", "gatling", "rpg" };
+        Random rand;
 
         SpriteFont font;
 
@@ -57,6 +60,8 @@ namespace Pandemic
             screenManager = new ScreenManager();
             npcManager = NPCManager.SharedManager;
 
+            rand = new Random();
+
             Content.RootDirectory = "Content";
         }
 
@@ -77,6 +82,11 @@ namespace Pandemic
             mainMenu = new MainMenu(this);
             gameOver = new GameOver();
             help = new ImageDisplay();
+            weaponBox = new Weapon[5];
+            for(int i = 0; i < 5; i++){
+                weaponBox[i] = new Weapon(weaponNameSet[rand.Next(weaponNameSet.Length)]);
+            }
+
             //mainMenu.Initialize();
 
             setupMainState();
@@ -98,6 +108,10 @@ namespace Pandemic
 
             mainMenu.LoadContent(Content);
             gameOver.LoadContent(Content);
+
+            for(int i = 0; i < 5; i++){
+                weaponBox[i].LoadContent(Content);
+            }
 
             help.LoadContent(Content, "Help\\Help");
             bgm = Content.Load<Song>(Constants.MusicFolder + "\\" + Constants.BackgroundMusic);
@@ -149,6 +163,16 @@ namespace Pandemic
 
                     player.PostUpdate();
                     npcManager.PostUpdate();
+
+                    foreach (Weapon weapon in weaponBox)
+                    {
+                        weapon.Update(elapsedTime);
+                        if (player.Intersects(weapon.GetRectangle()))
+                        {
+                            player.GetWeapon(weapon);
+                            weapon.KillObject();
+                        }
+                    }
 
                     break;
                 case GameState.gameover:
@@ -265,6 +289,9 @@ namespace Pandemic
                     spriteBatch.DrawString(font, "LeftSurvivor : " + npcManager.survivor.ToString(), new Vector2(0, 500), Color.Black);
                     spriteBatch.DrawString(font, "PlayTime : " + npcManager.playTime.ToString(), new Vector2(0, 530), Color.Black);
 
+                    foreach (Weapon weapon in weaponBox)
+                        weapon.Draw(spriteBatch, screenManager);
+
                     break;
                 case GameState.gameover:
                     map.Draw(spriteBatch, screenManager);
@@ -375,6 +402,13 @@ namespace Pandemic
             npcManager.map = map;
             player.Initialize(this);
             player.Spawn(Stage.stageInstance.PlayerInitialPosition);
+
+            foreach (Weapon weapon in weaponBox)
+            {
+                weapon.Initialize();
+                weapon.Spawn(new Vector2(rand.Next(-Stage.stageInstance.MapWidth / 2, Stage.stageInstance.MapWidth / 2),
+                    rand.Next(-Stage.stageInstance.MapHeight / 2, Stage.stageInstance.MapHeight / 2)));
+            }
         }
 
         protected void teardownPlayState()
@@ -394,7 +428,7 @@ namespace Pandemic
 
         protected void setupGameoverState()
         {
-            this.BindKeyboardEventListener(Keys.Enter,new keyboardEventListener(() => changeState(GameState.main)));
+            this.BindKeyboardEventListener(Keys.Space,new keyboardEventListener(() => changeState(GameState.main)));
             GameOver.ResultContext result;
 
             result.kill = npcManager.kill;
@@ -404,7 +438,7 @@ namespace Pandemic
 
         protected void teardownGameoverState()
         {
-            this.UnbindKeyboardEvent(Keys.Enter);
+            this.UnbindKeyboardEvent(Keys.Space);
         }
     }
 }

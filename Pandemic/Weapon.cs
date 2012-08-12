@@ -27,15 +27,19 @@ namespace Pandemic
         static Texture2D effectTex;
         Texture2D tileTex;
 
-        const int RectSize = 30;
+        string name;
+
+        protected override int rectSize { get { return 30; } }
 
         int damage;
         float effectTimeOut;
 
         bool alive;
 
-        public Weapon(string name)
+        public Weapon(string weaponName)
         {
+            name = weaponName;
+
             range = Stage.stageInstance.WeaponSpec[name].range;
 
             atkAreaUp = Stage.stageInstance.WeaponSpec[name].AttackAreaUp;
@@ -46,6 +50,11 @@ namespace Pandemic
             atkCooldown = Stage.stageInstance.WeaponSpec[name].Cooldown;
             effectTimeOut = Stage.stageInstance.WeaponSpec[name].EffectTimeOut;
             damage = Stage.stageInstance.WeaponSpec[name].damage;
+        }
+
+        public string GetName()
+        {
+            return name;
         }
 
         public override void Initialize()
@@ -68,8 +77,14 @@ namespace Pandemic
         {
         }
 
+        public void KillObject()
+        {
+            isAlive = false;
+        }
+
         public override void LoadContent(ContentManager Content)
         {
+            tileTex = Content.Load<Texture2D>("box");
         }
 
         public static void LoadCommonContent(ContentManager Content)
