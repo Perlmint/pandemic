@@ -75,6 +75,8 @@ namespace Pandemic
             screenManager.applySizeToGraphicsMgr(graphics);
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
             player = new Player(this);
+            player.updateScreenManager(screenManager);
+            player.updateMap(map);
 
             mainMenu = new MainMenu(this);
             gameOver = new GameOver();
@@ -101,6 +103,7 @@ namespace Pandemic
             player.LoadContent(Content);
             mainMenu.LoadContent(Content);
             gameOver.LoadContent(Content);
+            map.LoadContent(Content);
             help.LoadContent(Content, "GameOver\\GameOver");
             bgm = Content.Load<Song>(Constants.MusicFolder + "\\" + Constants.BackgroundMusic);
             bgm2 = Content.Load<Song>(Constants.MusicFolder + "\\they are comming");

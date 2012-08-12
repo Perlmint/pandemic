@@ -97,7 +97,7 @@ namespace Pandemic
             ScreenHeight = 600,
             TileWidth = 50,
             TileHeight = 50,
-            PlayerInitialPosition = new Vector2(30, 20),
+            PlayerInitialPosition = new Vector2(0, 0),
             weapons = new string[] { "basic", "advanced", "extreme" },
             obstacles = new string[] { "house1", "house2", "house3", "house4", "tree1", "tree2", "stone" },
             Units = new UnitTextures()
@@ -177,8 +177,8 @@ namespace Pandemic
             ObstaclesArrangeSpec = new Dictionary<Vector2, string>()
             {
                 {new Vector2(1, 1), "house1"},
-                {new Vector2(1, 2), "house2"},
-                {new Vector2(2, 1), "house3"},
+                {new Vector2(1, 2), "house3"},
+                {new Vector2(2, 1), "house2"},
                 {new Vector2(2, 2), "house4"},
                 {new Vector2(5, 1), "stone"},
                 {new Vector2(7, 4), "stone"},

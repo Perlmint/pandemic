@@ -52,6 +52,9 @@ namespace Pandemic
         const float corpseTimeOut = 5.0f;
         Game1 game;
 
+        ScreenManager screenManager;
+        Map map;
+
         public Player(Game1 paramGame)
         {
             int i;
@@ -110,16 +113,29 @@ namespace Pandemic
             return bullets;
         }
 
+        public void updateScreenManager(ScreenManager screenManager)
+        {
+            this.screenManager = screenManager;
+        }
+
+        public void updateMap(Map map)
+        {
+            this.map = map;
+        }
+
         public void Initialize(Game1 game)
         {
             base.Initialize();
 
-            game.BindKeyboardEventListener(Keys.Up, this.MoveUp);
-            game.BindKeyboardEventListener(Keys.Down, this.MoveDown);
-            game.BindKeyboardEventListener(Keys.Right, this.MoveRight);
-            game.BindKeyboardEventListener(Keys.Left, this.MoveLeft);
+            game.BindKeyboardEventListener(Keys.W, this.MoveUp);
+            game.BindKeyboardEventListener(Keys.S, this.MoveDown);
+            game.BindKeyboardEventListener(Keys.D, this.MoveRight);
+            game.BindKeyboardEventListener(Keys.A, this.MoveLeft);
 
-            game.BindKeyboardEventListener(Keys.Space, this.Fire);
+            game.BindKeyboardEventListener(Keys.Left, () => { ChangeDirection(Direction.left); this.Fire(); });
+            game.BindKeyboardEventListener(Keys.Right, () => { ChangeDirection(Direction.right); this.Fire(); });
+            game.BindKeyboardEventListener(Keys.Up, () => { ChangeDirection(Direction.up); this.Fire(); });
+            game.BindKeyboardEventListener(Keys.Down, () => { ChangeDirection(Direction.down); this.Fire(); });
 
             direction = Direction.right;
             tex = texRight[weaponName];
@@ -139,11 +155,13 @@ namespace Pandemic
             switch (state)
             {
                 case State.alive:
-                    
-                    rect.X = (int)position.X;
-                    rect.Y = (int)position.Y;
-                    rect.Width = RectSize;
-                    rect.Height = RectSize;
+                    SetRectangle(new Rectangle()
+                    {
+                        X = (int)position.X,
+                        Y = (int)position.Y,
+                        Width = RectSize,
+                        Height = RectSize
+                    });
                     break;
                 case State.almost_dead:
                     break;
@@ -160,11 +178,13 @@ namespace Pandemic
                     {
                         state = State.alive;
                     }
-
-                    rect.X = (int)position.X;
-                    rect.Y = (int)position.Y;
-                    rect.Width = RectSize;
-                    rect.Height = RectSize;
+                    SetRectangle(new Rectangle()
+                    {
+                        X = (int)position.X,
+                        Y = (int)position.Y,
+                        Width = RectSize,
+                        Height = RectSize
+                    });
                     break;
             }
 
@@ -205,30 +225,42 @@ namespace Pandemic
 
         void MoveUp()
         {
-            position.Y -= Speed;
+            updatePosition(new Vector2(0, - Speed));
             ChangeDirection(Direction.up);
             tex = texUp[weaponName];
         }
 
         void MoveDown()
         {
-            position.Y += Speed;
+            updatePosition(new Vector2(0, + Speed));
             ChangeDirection(Direction.down);
             tex = texDown[weaponName];
         }
 
         void MoveLeft()
         {
-            position.X -= Speed;
+            updatePosition(new Vector2(- Speed, 0));
             ChangeDirection(Direction.left);
             tex = texLeft[weaponName];
         }
 
         void MoveRight()
         {
-            position.X += Speed;
+            updatePosition(new Vector2(+ Speed, 0));
             ChangeDirection(Direction.right);
             tex = texRight[weaponName];
+        }
+
+        bool updatePosition(Vector2 offset)
+        {
+            if (map.isInMap(position + offset))
+            {
+                position += offset;
+                screenManager.SetScreenCenter(position - screenManager.GetScreenSize() / 2 * map.TotalRelativeCoord(position));
+                return true;
+            }
+            else
+                return false;
         }
 
         void ChangeDirection(Direction newDirection)
@@ -236,6 +268,21 @@ namespace Pandemic
             if (direction != newDirection)
             {
                 // TODO: change Sprite Image
+                switch (newDirection)
+                {
+                    case Direction.up:
+                        tex = texUp[weaponName];
+                        break;
+                    case Direction.down:
+                        tex = texDown[weaponName];
+                        break;
+                    case Direction.left:
+                        tex = texLeft[weaponName];
+                        break;
+                    case Direction.right:
+                        tex = texRight[weaponName];
+                        break;
+                }
                 direction = newDirection;
             }
         }
@@ -328,15 +375,15 @@ namespace Pandemic
                 {
                     case State.alive:
                         //base.Draw(spriteBatch);
-                        spriteBatch.Draw(tex, rect, Color.White);
+                        spriteBatch.Draw(tex, screen.translateWorldToScreen(GetRectangle()), Color.White);
                         break;
                     case State.dead:
-                        spriteBatch.Draw(dead, rect, Color.White);
+                        spriteBatch.Draw(dead, screen.translateWorldToScreen(GetRectangle()), Color.White);
                         break;
                     case State.almost_dead:
                         break;
                     case State.absolute:
-                        spriteBatch.Draw(tex, rect, new Color(1.0f, 1.0f, 1.0f, 0.5f));
+                        spriteBatch.Draw(tex, screen.translateWorldToScreen(GetRectangle()), new Color(1.0f, 1.0f, 1.0f, 0.5f));
                         break;
                 }
             }
