@@ -53,8 +53,6 @@ namespace Pandemic
             atkCooldown = Stage.stageInstance.WeaponSpec[name].Cooldown;
             effectTimeOut = Stage.stageInstance.WeaponSpec[name].EffectTimeOut;
             damage = Stage.stageInstance.WeaponSpec[name].damage;
-
-            //effTexDic = new Dictionary<string, Texture2D>();
         }
 
         public string GetName()

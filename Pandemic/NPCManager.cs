@@ -14,6 +14,7 @@ namespace Pandemic
         float NPCBasicGenerationRate;
 
         float accumulateElapsedTime;
+        float playTimer;
         const float generateInterval = 0.5f;
 
         List<NPC> NPCList;
@@ -24,8 +25,8 @@ namespace Pandemic
 
         Random randomGenerator;
 
-        public float playTime { get { return (NPCBasicGenerationRate - 5) * 10; } }
-        public UInt32 kill { get { return (UInt32)(2147483647 - numberOfRestGeneratableNPC - NPCList.Count); } }
+        public float playTime { get { return playTimer; } }
+        public UInt32 kill { get { return (UInt32)(2147483647 - numberOfRestGeneratableNPC - NPCList.Count + 5); } }
         public UInt32 survivor { get { return numberOfRestGeneratableNPC;  } }
 
         protected NPCManager()
@@ -46,6 +47,7 @@ namespace Pandemic
             {
                 NPCList.Add(createNPC(new Vector2(200, 200)));
             }
+            playTimer = 0;
         }
 
         protected NPC createNPC(Vector2 playerPosition)
@@ -59,10 +61,13 @@ namespace Pandemic
         {
             accumulateElapsedTime += elapsedTime;
             NPCBasicGenerationRate += elapsedTime * 0.1f;
+            //NPCBasicGenerationRate += elapsedTime * 0.03f;
+            playTimer += elapsedTime;
 
             for (; accumulateElapsedTime > generateInterval; accumulateElapsedTime -= generateInterval)
             {
-                NPCGenerationRate = (UInt16)(NPCBasicGenerationRate / 5 + 4 * Math.Sqrt(Math.Pow(NPCList.Count, 2) / Math.Sqrt(numberOfRestGeneratableNPC)));
+                NPCGenerationRate = (UInt16)(NPCBasicGenerationRate / 5 + 4 * Math.Sqrt(Math.Pow(NPCList.Count, 2.15) / Math.Sqrt(numberOfRestGeneratableNPC)));
+                //NPCGenerationRate = (UInt16)(NPCBasicGenerationRate + 3 * Math.Pow(NPCList.Count, 1) + 2.1);
                 for (int i = NPCGenerationRate; i > 0 && numberOfRestGeneratableNPC > 0; numberOfRestGeneratableNPC--, i--)
                 {
                     NPC newNPC = createNPC(playerPosition);

@@ -59,7 +59,7 @@ namespace Pandemic
         public Player(Game1 paramGame)
         {
             int i;
-            weaponName = "dagger";
+            weaponName = "handgun";
             game = paramGame;
             weapon = new Weapon(weaponName);
 
@@ -222,22 +222,34 @@ namespace Pandemic
 
         void MoveUp()
         {
-            expectedSpeed_ += new Vector2(0, - Speed);
+            if (state != State.dead)
+                expectedSpeed_ += new Vector2(0, -Speed);
+            else
+                expectedSpeed_ = new Vector2();
         }
 
         void MoveDown()
         {
-            expectedSpeed_ += new Vector2(0, + Speed);
+            if (state != State.dead)
+                expectedSpeed_ += new Vector2(0, +Speed);
+            else
+                expectedSpeed_ = new Vector2();
         }
 
         void MoveLeft()
         {
-            expectedSpeed_ += new Vector2(- Speed, 0);
+            if (state != State.dead)
+                expectedSpeed_ += new Vector2(- Speed, 0);
+            else
+                expectedSpeed_ = new Vector2();
         }
 
         void MoveRight()
         {
-            expectedSpeed_ += new Vector2(+ Speed, 0);
+            if (state != State.dead)
+                expectedSpeed_ += new Vector2(+ Speed, 0);
+            else
+                expectedSpeed_ = new Vector2();
         }
 
         bool updatePosition(Vector2 offset)

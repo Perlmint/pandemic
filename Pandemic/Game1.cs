@@ -32,9 +32,10 @@ namespace Pandemic
         MainMenu mainMenu;
         Song bgm;
         Song bgm2;
+        Song gameOverSound;
         GameOver gameOver;
         ImageDisplay help;
-        Weapon[] weaponBox;
+        List<Weapon> weaponBox;
         string[] weaponNameSet = { "dagger", "sword", "handgun", "gatling", "rpg" };
         Random rand;
 
@@ -44,6 +45,7 @@ namespace Pandemic
 
         enum GameState
         {
+            init,
             main,
             play,
             gameover,
@@ -75,21 +77,20 @@ namespace Pandemic
         {
             // TODO: Add your initialization logic here
             
-            state = GameState.main;
+            state = GameState.init;
             //setupOpeningState();
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
 
             mainMenu = new MainMenu(this);
             gameOver = new GameOver();
             help = new ImageDisplay();
-            weaponBox = new Weapon[5];
+            weaponBox = new List<Weapon>();
+
             for(int i = 0; i < 5; i++){
-                weaponBox[i] = new Weapon(weaponNameSet[rand.Next(weaponNameSet.Length)]);
+                weaponBox.Add(new Weapon(weaponNameSet[rand.Next(weaponNameSet.Length)]));
             }
 
             //mainMenu.Initialize();
-
-            setupMainState();
             
             base.Initialize();
         }
@@ -116,11 +117,12 @@ namespace Pandemic
             help.LoadContent(Content, "Help\\Help");
             bgm = Content.Load<Song>(Constants.MusicFolder + "\\" + Constants.BackgroundMusic);
             bgm2 = Content.Load<Song>(Constants.MusicFolder + "\\they are comming");
+            gameOverSound = Content.Load<Song>(Constants.MusicFolder + "\\shout");
 
             font = Content.Load<SpriteFont>("font");
             
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(bgm);
+            //MediaPlayer.IsRepeating = true;
+            //MediaPlayer.Play(bgm);
             //MediaPlayer.Pause();
 
             // TODO: use this.Content to load your game content here
@@ -150,6 +152,10 @@ namespace Pandemic
 
             switch (state)
             {
+                case GameState.init:
+                    //setupMainState();
+                    changeState(GameState.main);
+                    break;
                 case GameState.main:
                     mainMenu.Update(elapsedTime);
                     break;
@@ -167,10 +173,20 @@ namespace Pandemic
                     foreach (Weapon weapon in weaponBox)
                     {
                         weapon.Update(elapsedTime);
-                        if (player.Intersects(weapon.GetRectangle()))
+
+                        if (!weapon.IsAlive())
                         {
-                            player.GetWeapon(weapon);
-                            weapon.KillObject();
+                            weapon.Initialize();
+                            weapon.Spawn(new Vector2(rand.Next(-Stage.stageInstance.MapWidth / 2, Stage.stageInstance.MapWidth / 2),
+                                rand.Next(-Stage.stageInstance.MapHeight / 2, Stage.stageInstance.MapHeight / 2)));
+                        }
+                        else
+                        {
+                            if (player.Intersects(weapon.GetRectangle()))
+                            {
+                                player.GetWeapon(weapon);
+                                weapon.KillObject();
+                            }
                         }
                     }
 
@@ -364,7 +380,10 @@ namespace Pandemic
 
         protected void setupMainState()
         {
-            MediaPlayer.Resume();
+            //MediaPlayer.Resume();
+            MediaPlayer.Stop();
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(bgm);
             mainMenu.Initialize();
         }
 
@@ -402,13 +421,6 @@ namespace Pandemic
             npcManager.map = map;
             player.Initialize(this);
             player.Spawn(Stage.stageInstance.PlayerInitialPosition);
-
-            foreach (Weapon weapon in weaponBox)
-            {
-                weapon.Initialize();
-                weapon.Spawn(new Vector2(rand.Next(-Stage.stageInstance.MapWidth / 2, Stage.stageInstance.MapWidth / 2),
-                    rand.Next(-Stage.stageInstance.MapHeight / 2, Stage.stageInstance.MapHeight / 2)));
-            }
         }
 
         protected void teardownPlayState()
@@ -423,7 +435,8 @@ namespace Pandemic
             this.UnbindKeyboardEvent(Keys.D);
             this.UnbindKeyboardEvent(Keys.Space);
             MediaPlayer.Stop();
-            MediaPlayer.Play(bgm);
+            MediaPlayer.IsRepeating = false;
+            MediaPlayer.Play(gameOverSound);
         }
 
         protected void setupGameoverState()
