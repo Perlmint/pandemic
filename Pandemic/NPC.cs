@@ -25,6 +25,7 @@ namespace Pandemic
         static Texture2D dead;
         static Texture2D tex;
         protected override int rectSize { get { return 30; } }
+        public bool IsDead { get { return state == State.dead; } }
 
         float corpseTimer;
         const float CorpseTimeOut = 3.0f;

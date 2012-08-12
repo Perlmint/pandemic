@@ -158,7 +158,9 @@ namespace Pandemic
                     {"house2", "house2"},
                     {"house3", "house3"},
                     {"house4", "house4"},
-                    {"stone", "stone"}
+                    {"stone", "stone"},
+                    {"tree1", "tree1"},
+                    {"tree2", "tree2"}
                         
                 }
             },
@@ -204,10 +206,10 @@ namespace Pandemic
                     {0,1,1},
                     {1,1,2},
                     {0,1,1}},
-                    Cooldown = 1.0f,
+                    Cooldown = 0.15f,
                     range = 1,
                     EffectTimeOut = 0.1f,
-                    damage = 35
+                    damage = 50
                 }},
                 {"handgun", new WeaponSpec() {
                     AttackAreaUp = new int[,] {
@@ -218,10 +220,10 @@ namespace Pandemic
                     {2}},
                     AttackAreaLeft = new int[,] {
                     {2}},
-                    Cooldown = 0.5f,
+                    Cooldown = 0.3f,
                     range = 400,
                     EffectTimeOut = 0.1f,
-                    damage = 50
+                    damage = 100
                 }},
                 {"sword", new WeaponSpec() {
                     AttackAreaLeft = new int[,] {
@@ -248,10 +250,10 @@ namespace Pandemic
                     {1,1,1,1,2},
                     {0,1,1,1,1},
                     {0,0,0,0,1}},
-                    Cooldown = 0.5f,
+                    Cooldown = 0.4f,
                     range = 1,
                     EffectTimeOut = 0.1f,
-                    damage = 50
+                    damage = 100
                 }},
                 {"gatling", new WeaponSpec() {
                     AttackAreaUp = new int[,] {
@@ -262,30 +264,38 @@ namespace Pandemic
                     {2}},
                     AttackAreaLeft = new int[,] {
                     {2}},
-                    Cooldown = 0.2f,
+                    Cooldown = 0.1f,
                     range = 400,
                     EffectTimeOut = 0.1f,
-                    damage = 35
+                    damage = 50
                 }},
                 {"rpg", new WeaponSpec() {
                     AttackAreaUp = new int[,] {
-                    {1,1,1},
-                    {1,2,1},
-                    {1,1,1}},
+                    {0,1,1,1,0},
+                    {1,1,1,1,1},
+                    {1,1,2,1,1},
+                    {1,1,1,1,1},
+                    {0,1,1,1,0}},
                     AttackAreaDown = new int[,] {
-                    {1,1,1},
-                    {1,2,1},
-                    {1,1,1}},
+                    {0,1,1,1,0},
+                    {1,1,1,1,1},
+                    {1,1,2,1,1},
+                    {1,1,1,1,1},
+                    {0,1,1,1,0}},
                     AttackAreaRight = new int[,] {
-                    {1,1,1},
-                    {1,2,1},
-                    {1,1,1}},
+                    {0,1,1,1,0},
+                    {1,1,1,1,1},
+                    {1,1,2,1,1},
+                    {1,1,1,1,1},
+                    {0,1,1,1,0}},
                     AttackAreaLeft = new int[,] {
-                    {1,1,1},
-                    {1,2,1},
-                    {1,1,1}},
-                    Cooldown = 0.5f,
-                    range = 400,
+                    {0,1,1,1,0},
+                    {1,1,1,1,1},
+                    {1,1,2,1,1},
+                    {1,1,1,1,1},
+                    {0,1,1,1,0}},
+                    Cooldown = 0.4f,
+                    range = 200,
                     EffectTimeOut = 0.5f,
                     damage = 100
                 }}
