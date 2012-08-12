@@ -18,7 +18,15 @@ namespace Pandemic
 
         List<NPC> NPCList;
 
+        public Map map;
+
+        public List<NPC> NPCs { get { return NPCList; } }
+
         Random randomGenerator;
+
+        public float playTime { get { return (NPCBasicGenerationRate - 5) * 10; } }
+        public UInt32 kill { get { return (UInt32)(2147483647 - numberOfRestGeneratableNPC - NPCList.Count); } }
+        public UInt32 survivor { get { return numberOfRestGeneratableNPC;  } }
 
         protected NPCManager()
         {
@@ -72,11 +80,28 @@ namespace Pandemic
             NPCList.RemoveAll(npc => !npc.IsAlive());
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Move()
         {
             foreach (NPC npc in NPCList)
             {
-                npc.Draw(spriteBatch);
+                npc.Move(map.CalcRealDirection(npc));
+            }
+        }
+
+        public void PostUpdate()
+        {
+            foreach (NPC npc in NPCList)
+            {
+                npc.PostUpdate();
+            }
+            NPCList.RemoveAll(npc => !npc.IsAlive());
+        }
+
+        public void Draw(SpriteBatch spriteBatch, ScreenManager screen)
+        {
+            foreach (NPC npc in NPCList)
+            {
+                npc.Draw(spriteBatch, screen);
             }
         }
 

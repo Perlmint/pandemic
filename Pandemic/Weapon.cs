@@ -13,41 +13,66 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace Pandemic
 {
-    class Weapon
+    class Weapon : GameObject
     {
         int range;
-        int[,] atkArea;
-        Vector2 position;
+        int[,] atkAreaUp;
+        int[,] atkAreaDown;
+        int[,] atkAreaRight;
+        int[,] atkAreaLeft;
 
         float atkCooldown;
 
-        Texture2D bulletTex;
-        Texture2D effectTex;
+        static Texture2D bulletTex;
+        static Texture2D effectTex;
         Texture2D tileTex;
 
+        const int RectSize = 30;
+
         int damage;
+        float effectTimeOut;
 
         bool alive;
 
-        public Weapon(int weaponRange, int[,] attackArea, float cooldown, int dmg)
+        public Weapon(string name)
         {
-            range = weaponRange;
-            atkArea = attackArea;
-            atkCooldown = cooldown;
-            damage = dmg;
+            range = Stage.stageInstance.WeaponSpec[name].range;
+
+            atkAreaUp = Stage.stageInstance.WeaponSpec[name].AttackAreaUp;
+            atkAreaDown = Stage.stageInstance.WeaponSpec[name].AttackAreaDown;
+            atkAreaRight = Stage.stageInstance.WeaponSpec[name].AttackAreaRight;
+            atkAreaLeft = Stage.stageInstance.WeaponSpec[name].AttackAreaLeft;
+
+            atkCooldown = Stage.stageInstance.WeaponSpec[name].Cooldown;
+            effectTimeOut = Stage.stageInstance.WeaponSpec[name].EffectTimeOut;
+            damage = Stage.stageInstance.WeaponSpec[name].damage;
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
         }
 
-        public void Spawn(Vector2 pos)
+        public override void Spawn(Vector2 pos)
         {
+            base.Spawn(pos);
             position = pos;
             alive = true;
         }
 
-        public void LoadContent(ContentManager Content)
+        public override void Update(float elapsedGameTime)
+        {
+        }
+
+        public override void PostUpdate()
+        {
+        }
+
+        public override void LoadContent(ContentManager Content)
+        {
+        }
+
+        public static void LoadCommonContent(ContentManager Content)
         {
             bulletTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Bullet["basic"].DefaultTexture);
             effectTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Effect["basic"][0]);
@@ -64,6 +89,10 @@ namespace Pandemic
             return damage;
         }
 
+        public float GetEffectTimeOut()
+        {
+            return effectTimeOut;
+        }
 
         public Texture2D GetBulletTex()
         {
@@ -75,9 +104,24 @@ namespace Pandemic
             return effectTex;
         }
 
-        public int[,] GetArea()
+        public int[,] GetAreaUp()
         {
-            return atkArea;
+            return atkAreaUp;
+        }
+
+        public int[,] GetAreaDown()
+        {
+            return atkAreaDown;
+        }
+
+        public int[,] GetAreaRight()
+        {
+            return atkAreaRight;
+        }
+
+        public int[,] GetAreaLeft()
+        {
+            return atkAreaLeft;
         }
 
         public int GetRange()
@@ -85,11 +129,11 @@ namespace Pandemic
             return range;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch, ScreenManager screen)
         {
             if (alive)
             {
-                spriteBatch.Draw(tileTex, position, Color.White);
+                spriteBatch.Draw(tileTex, screen.translateWorldToScreen(GetRectangle()), Color.White);
             }
         }
     }

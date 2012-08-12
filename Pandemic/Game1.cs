@@ -21,7 +21,7 @@ namespace Pandemic
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
-Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
+        Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
         ScreenManager screenManager;
         GameState state;
@@ -31,21 +31,21 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         Map map;
         MainMenu mainMenu;
         Song bgm;
+        Song bgm2;
+        GameOver gameOver;
+        ImageDisplay help;
+
+        SpriteFont font;
 
         float elapsedTime;
 
         enum GameState
         {
-            opening,
             main,
             play,
-            gameover
+            gameover,
+            help
         };
-
-        static Action Curry<T>(Action<T> action, T parameter)
-        {
-            return () => action(parameter);
-        }
 		
         public delegate void keyboardEventListener();
 
@@ -69,17 +69,17 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            stage = Stage.stageInstance;
-            map = Map.createFromStage(stage);
-            state = GameState.opening;
-            setupOpeningState();
-            screenManager.setSizeFromStage(stage);
-            screenManager.applySizeToGraphicsMgr(graphics);
+            
+            state = GameState.main;
+            //setupOpeningState();
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
-            player = new Player(this);
 
             mainMenu = new MainMenu(this);
+            gameOver = new GameOver();
+            help = new ImageDisplay();
             //mainMenu.Initialize();
+
+            setupMainState();
             
             base.Initialize();
         }
@@ -93,16 +93,21 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            NPC npc = new NPC();
-            npc.LoadContent(Content);
+            NPC.LoadCommonContent(Content);
+            Player.LoadCommonContent(Content);
 
-            player.LoadContent(Content);
             mainMenu.LoadContent(Content);
+            gameOver.LoadContent(Content);
+
+            help.LoadContent(Content, "Help\\Help");
             bgm = Content.Load<Song>(Constants.MusicFolder + "\\" + Constants.BackgroundMusic);
+            bgm2 = Content.Load<Song>(Constants.MusicFolder + "\\they are comming");
+
+            font = Content.Load<SpriteFont>("font");
             
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(bgm);
-            MediaPlayer.Pause();
+            //MediaPlayer.Pause();
 
             // TODO: use this.Content to load your game content here
         }
@@ -131,19 +136,35 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
 
             switch (state)
             {
-                case GameState.opening:
-                    break;
                 case GameState.main:
                     mainMenu.Update(elapsedTime);
                     break;
                 case GameState.play:
                     player.Update(elapsedTime);
-
                     npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
-                    player.NPCCollision(npcManager.GetNPCRectList());
+                    player.NPCCollision(npcManager.NPCs);
+
+                    player.Move(player.expectedSpeed);//map.CalcRealDirection(player));
+                    npcManager.Move();
+
+                    player.PostUpdate();
+                    npcManager.PostUpdate();
 
                     break;
                 case GameState.gameover:
+                    player.Update(elapsedTime);
+                    npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
+                    player.NPCCollision(npcManager.NPCs);
+
+                    player.Move(player.expectedSpeed);//map.CalcRealDirection(player));
+                    npcManager.Move();
+
+                    player.PostUpdate();
+                    npcManager.PostUpdate();
+                    gameOver.Update(elapsedTime);
+                    break;
+                case GameState.help:
+                    help.Update(elapsedTime);
                     break;
             }
 
@@ -234,17 +255,25 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             spriteBatch.Begin();
             switch (state)
             {
-                case GameState.opening:
-                    break;
                 case GameState.main:
                     mainMenu.Draw(spriteBatch);
                     break;
                 case GameState.play:
-                    npcManager.Draw(spriteBatch);
-                    player.Draw(spriteBatch);
+                    map.Draw(spriteBatch, screenManager);
+                    npcManager.Draw(spriteBatch, screenManager);
+                    player.Draw(spriteBatch, screenManager);
+                    spriteBatch.DrawString(font, "LeftSurvivor : " + npcManager.survivor.ToString(), new Vector2(0, 500), Color.Black);
+                    spriteBatch.DrawString(font, "PlayTime : " + npcManager.playTime.ToString(), new Vector2(0, 530), Color.Black);
+
                     break;
                 case GameState.gameover:
-
+                    map.Draw(spriteBatch, screenManager);
+                    npcManager.Draw(spriteBatch, screenManager);
+                    player.Draw(spriteBatch, screenManager);
+                    gameOver.Draw(spriteBatch);
+                    break;
+                case GameState.help:
+                    help.Draw(spriteBatch);
                     break;
             }
             spriteBatch.End();
@@ -252,9 +281,13 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             base.Draw(gameTime);
         }
 
+        public void Help()
+        {
+            changeState(GameState.help);
+        }
+
         public void Play()
         {
-            
             changeState(GameState.play);
         }
 
@@ -269,9 +302,6 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             {
                 switch (state)
                 {
-                    case GameState.opening:
-                        teardownOpeningState();
-                        break;
                     case GameState.main:
                         teardownMainState();
                         break;
@@ -281,13 +311,13 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
                     case GameState.gameover:
                         teardownGameoverState();
                         break;
+                    case GameState.help:
+                        teardownHelpState();
+                        break;
                 }
 
                 switch (newState)
                 {
-                    case GameState.opening:
-                        setupOpeningState();
-                        break;
                     case GameState.main:
                         setupMainState();
                         break;
@@ -297,37 +327,52 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
                     case GameState.gameover:
                         setupGameoverState();
                         break;
+                    case GameState.help:
+                        setupHelpState();
+                        break;
                 }
                 state = newState;
             }
         }
 
-        protected void setupOpeningState()
-        {
-            BindKeyboardEventListener(Keys.Enter, new keyboardEventListener(Curry(changeState, GameState.main)));
-        }
-
-        protected void teardownOpeningState()
-        {
-            UnbindKeyboardEvent(Keys.Enter);
-        }
-
         protected void setupMainState()
         {
-            mainMenu.Initialize();
             MediaPlayer.Resume();
+            mainMenu.Initialize();
         }
 
         protected void teardownMainState()
         {
             UnbindKeyboardEvent(Keys.Up);
             UnbindKeyboardEvent(Keys.Down);
+            UnbindKeyboardEvent(Keys.Enter);
+        }
+
+        protected void teardownHelpState()
+        {
             UnbindKeyboardEvent(Keys.Space);
+        }
+
+        protected void setupHelpState()
+        {
+            BindKeyboardEventListener(Keys.Space, new keyboardEventListener(() => changeState(GameState.main)));
+            help.Initialize();
         }
 
         protected void setupPlayState()
         {
+            MediaPlayer.Stop();
+            MediaPlayer.Play(bgm2);
+            stage = Stage.stageInstance;
+            map = Map.createFromStage(stage);
+            map.LoadContent(Content);
+            screenManager.setSizeFromStage(stage);
+            screenManager.applySizeToGraphicsMgr(graphics);
+            player = new Player(this);
+            player.updateScreenManager(screenManager);
+            player.updateMap(map);
             npcManager.Initialize();
+            npcManager.map = map;
             player.Initialize(this);
             player.Spawn(Stage.stageInstance.PlayerInitialPosition);
         }
@@ -338,12 +383,23 @@ Dictionary<Keys, LinkedList<keyboardEventListener>> keyboardEventListeners;
             this.UnbindKeyboardEvent(Keys.Down);
             this.UnbindKeyboardEvent(Keys.Right);
             this.UnbindKeyboardEvent(Keys.Left);
+            this.UnbindKeyboardEvent(Keys.W);
+            this.UnbindKeyboardEvent(Keys.A);
+            this.UnbindKeyboardEvent(Keys.S);
+            this.UnbindKeyboardEvent(Keys.D);
             this.UnbindKeyboardEvent(Keys.Space);
+            MediaPlayer.Stop();
+            MediaPlayer.Play(bgm);
         }
 
         protected void setupGameoverState()
         {
-            this.BindKeyboardEventListener(Keys.Enter,new keyboardEventListener(Curry(changeState, GameState.main)));
+            this.BindKeyboardEventListener(Keys.Enter,new keyboardEventListener(() => changeState(GameState.main)));
+            GameOver.ResultContext result;
+
+            result.kill = npcManager.kill;
+            result.time = npcManager.playTime;
+            gameOver.Initialize(result);
         }
 
         protected void teardownGameoverState()
