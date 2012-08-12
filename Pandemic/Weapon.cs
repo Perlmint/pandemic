@@ -25,6 +25,9 @@ namespace Pandemic
 
         static Texture2D bulletTex;
         static Texture2D effectTex;
+        static Texture2D swordEffTex;
+        static Texture2D daggerEffTex;
+        static Dictionary<string, Texture2D> effTexDic = new Dictionary<string,Texture2D>();
         Texture2D tileTex;
 
         string name;
@@ -50,6 +53,8 @@ namespace Pandemic
             atkCooldown = Stage.stageInstance.WeaponSpec[name].Cooldown;
             effectTimeOut = Stage.stageInstance.WeaponSpec[name].EffectTimeOut;
             damage = Stage.stageInstance.WeaponSpec[name].damage;
+
+            //effTexDic = new Dictionary<string, Texture2D>();
         }
 
         public string GetName()
@@ -91,6 +96,14 @@ namespace Pandemic
         {
             bulletTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Bullet["basic"].DefaultTexture);
             effectTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Effect["basic"][0]);
+            swordEffTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Effect["sword"][0]);
+            daggerEffTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Effect["dagger"][0]);
+
+            effTexDic.Add("handgun", effectTex);
+            effTexDic.Add("rpg", effectTex);
+            effTexDic.Add("gatling", effectTex);
+            effTexDic.Add("sword", swordEffTex);
+            effTexDic.Add("dagger", daggerEffTex);
             // load tileTex
         }
 
@@ -116,7 +129,7 @@ namespace Pandemic
 
         public Texture2D GetEffectTex()
         {
-            return effectTex;
+            return effTexDic[name];
         }
 
         public int[,] GetAreaUp()

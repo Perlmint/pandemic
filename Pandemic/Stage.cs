@@ -148,7 +148,9 @@ namespace Pandemic
                     {"basic", new RedirectiveTextures() { DefaultTexture = "bullet" } }
                 },
                 Effect = new Dictionary<string, List<string>>() {
-                    {"basic", new List<string>() { "effect" } }
+                    {"basic", new List<string>() { "effect" } },
+                    {"dagger", new List<string>() { "Character\\dagger\\daggereff"}},
+                    {"sword", new List<string>() { "Character\\sword\\swordeff"}}
                 },
                 Ground = new List<string> {
                     "ground1", "ground2"
