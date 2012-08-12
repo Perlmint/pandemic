@@ -104,7 +104,7 @@ namespace Pandemic
             mainMenu.LoadContent(Content);
             gameOver.LoadContent(Content);
             map.LoadContent(Content);
-            help.LoadContent(Content, "GameOver\\GameOver");
+            help.LoadContent(Content, "Help\\help");
             bgm = Content.Load<Song>(Constants.MusicFolder + "\\" + Constants.BackgroundMusic);
             bgm2 = Content.Load<Song>(Constants.MusicFolder + "\\they are comming");
             
@@ -150,6 +150,10 @@ namespace Pandemic
 
                     break;
                 case GameState.gameover:
+                    player.Update(elapsedTime);
+
+                    npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
+                    player.NPCCollision(npcManager.NPCs);
                     gameOver.Update(elapsedTime);
                     break;
                 case GameState.help:
@@ -253,6 +257,9 @@ namespace Pandemic
                     player.Draw(spriteBatch, screenManager);
                     break;
                 case GameState.gameover:
+                    map.Draw(spriteBatch, screenManager);
+                    npcManager.Draw(spriteBatch, screenManager);
+                    player.Draw(spriteBatch, screenManager);
                     gameOver.Draw(spriteBatch);
                     break;
                 case GameState.help:
@@ -358,7 +365,12 @@ namespace Pandemic
             this.UnbindKeyboardEvent(Keys.Down);
             this.UnbindKeyboardEvent(Keys.Right);
             this.UnbindKeyboardEvent(Keys.Left);
-            this.UnbindKeyboardEvent(Keys.Space);
+            //this.UnbindKeyboardEvent(Keys.Space);
+            this.UnbindKeyboardEvent(Keys.W);
+            this.UnbindKeyboardEvent(Keys.S);
+            this.UnbindKeyboardEvent(Keys.D);
+            this.UnbindKeyboardEvent(Keys.A);
+
             MediaPlayer.Stop();
             MediaPlayer.Play(bgm);
         }
