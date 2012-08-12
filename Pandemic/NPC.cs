@@ -20,7 +20,7 @@ namespace Pandemic
             alive, almost_dead, dead, absolute
         };
         Vector2 destination;
-        const float Speed = 1.0f;
+        const float Speed = 2.0f;
         const int MaxHP = 100;
         static Texture2D dead;
         static Texture2D tex;

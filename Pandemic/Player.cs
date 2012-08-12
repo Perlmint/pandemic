@@ -25,7 +25,7 @@ namespace Pandemic
             left, right, up, down
         };
 
-        const float Speed = 2.0f;
+        const float Speed = 2.5f;
         const int MaxHP = 5;
         const int MaxBullet = 50;
         const int RectSize = 30;
