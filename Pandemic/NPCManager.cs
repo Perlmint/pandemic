@@ -62,7 +62,7 @@ namespace Pandemic
 
             for (; accumulateElapsedTime > generateInterval; accumulateElapsedTime -= generateInterval)
             {
-                NPCGenerationRate = (UInt16)(NPCBasicGenerationRate / 5 + Math.Sqrt(Math.Pow(NPCList.Count, 2) / Math.Sqrt(numberOfRestGeneratableNPC)));
+                NPCGenerationRate = (UInt16)(NPCBasicGenerationRate / 5 + 4 * Math.Sqrt(Math.Pow(NPCList.Count, 2) / Math.Sqrt(numberOfRestGeneratableNPC)));
                 for (int i = NPCGenerationRate; i > 0 && numberOfRestGeneratableNPC > 0; numberOfRestGeneratableNPC--, i--)
                 {
                     NPC newNPC = createNPC(playerPosition);

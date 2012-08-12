@@ -286,7 +286,7 @@ namespace Pandemic
                     map.Draw(spriteBatch, screenManager);
                     npcManager.Draw(spriteBatch, screenManager);
                     player.Draw(spriteBatch, screenManager);
-                    spriteBatch.DrawString(font, "LeftSurvivor : " + npcManager.survivor.ToString(), new Vector2(0, 500), Color.Black);
+                    spriteBatch.DrawString(font, "Zombies : " + npcManager.NPCs.Count(npc => !npc.IsDead).ToString(), new Vector2(0, 500), Color.Black);
                     spriteBatch.DrawString(font, "PlayTime : " + npcManager.playTime.ToString(), new Vector2(0, 530), Color.Black);
 
                     foreach (Weapon weapon in weaponBox)

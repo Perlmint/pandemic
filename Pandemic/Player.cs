@@ -26,7 +26,7 @@ namespace Pandemic
         };
 
         const float Speed = 2.5f;
-        const int MaxHP = 5;
+        const int MaxHP = 8;
         const int MaxBullet = 50;
         const int RectSize = 30;
         static Texture2D dead;
@@ -334,6 +334,21 @@ namespace Pandemic
             weaponName = wpn.GetName();
             Bullet.SetTexture(weapon.GetBulletTex(), weapon.GetEffectTex());
             //Bullet.SetEffectArea(weapon.GetArea);
+            switch (direction)
+            {
+                case Direction.up:
+                    tex = texUp[weaponName];
+                    break;
+                case Direction.down:
+                    tex = texDown[weaponName];
+                    break;
+                case Direction.left:
+                    tex = texLeft[weaponName];
+                    break;
+                case Direction.right:
+                    tex = texRight[weaponName];
+                    break;
+            }
         }
 
         public Vector2 GetPosition()
