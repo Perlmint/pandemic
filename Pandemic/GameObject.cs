@@ -16,6 +16,10 @@ namespace Pandemic
     abstract class GameObject
     {
         protected Vector2 position;
+        protected Vector2 expectedSpeed_;
+        protected virtual int rectSize { get { return 0; } }
+        public Vector2 expectedSpeed { get { return expectedSpeed_; } }
+
         private Rectangle rect;
         protected int hp;
         protected virtual Texture2D currentTexture { get { return null; } }
@@ -43,18 +47,13 @@ namespace Pandemic
         {
             hp += value;
         }
-
+        
         public virtual Rectangle GetRectangle()
         {
             if (isAlive)
-                return rect;
+                return new Rectangle((int)position.X, (int)position.Y, this.rectSize, this.rectSize);
             else
                 return new Rectangle();
-        }
-
-        public virtual Rectangle SetRectangle(Rectangle rect)
-        {
-            return this.rect = rect;
         }
 
         private bool Intersects(GameObject gameObject)
@@ -75,6 +74,11 @@ namespace Pandemic
 
         public bool CollidesWith(GameObject other, bool calcPerPixel)
         {
+            return CollidesWith(other, calcPerPixel, new Vector2());
+        }
+
+        public bool CollidesWith(GameObject other, bool calcPerPixel, Vector2 offset)
+        {
             // Get dimensions of texture
             if (other.currentTexture == null || currentTexture == null)
                 return false;
@@ -86,13 +90,13 @@ namespace Pandemic
             if (calcPerPixel)          // for small sizes (nobody will notice :P)
             {
                 return Bounds.Intersects(other.Bounds) // If simple intersection fails, don't even bother with per-pixel
-                    && PerPixelCollision(this, other);
+                    && PerPixelCollision(this, other, offset);
             }
 
             return Bounds.Intersects(other.Bounds);
         }
 
-        static bool PerPixelCollision(GameObject a, GameObject b)
+        static bool PerPixelCollision(GameObject a, GameObject b, Vector2 offset)
         {
             // Get Color data of each Texture
             Color[] bitsA = new Color[a.currentTexture.Width * a.currentTexture.Height];
@@ -141,6 +145,10 @@ namespace Pandemic
         }
 
         public abstract void Update(float elapsedGameTime);
+
+        public abstract void PostUpdate();
+
+        public virtual void Move(Vector2 direction) { position += direction; expectedSpeed_ = new Vector2(); }
         
         public abstract void Draw(SpriteBatch spriteBatch, ScreenManager screen);
 

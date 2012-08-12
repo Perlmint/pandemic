@@ -20,12 +20,11 @@ namespace Pandemic
         int[,] atkAreaDown;
         int[,] atkAreaRight;
         int[,] atkAreaLeft;
-        Vector2 position;
 
         float atkCooldown;
 
-        Texture2D bulletTex;
-        Texture2D effectTex;
+        static Texture2D bulletTex;
+        static Texture2D effectTex;
         Texture2D tileTex;
 
         const int RectSize = 30;
@@ -63,16 +62,17 @@ namespace Pandemic
 
         public override void Update(float elapsedGameTime)
         {
-            SetRectangle(new Rectangle()
-            {
-                X = (int) position.X,
-                Y = (int) position.Y,
-                Width = RectSize,
-                Height = RectSize
-            });
+        }
+
+        public override void PostUpdate()
+        {
         }
 
         public override void LoadContent(ContentManager Content)
+        {
+        }
+
+        public static void LoadCommonContent(ContentManager Content)
         {
             bulletTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Bullet["basic"].DefaultTexture);
             effectTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Effect["basic"][0]);

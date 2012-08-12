@@ -91,6 +91,7 @@
     <Compile Include="ImageDisplay.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MainMenu.cs" />
+    <Compile Include="MovementManager.cs" />
     <Compile Include="NPC.cs" />
     <Compile Include="NPCManager.cs" />
     <Compile Include="Obstacle.cs" />

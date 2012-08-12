@@ -16,19 +16,41 @@ namespace Pandemic
 {
     class Obstacle : GameObject
     {
-        Vector2 position;
         string texpath;
         Texture2D tex;
         Map map;
         int Tx, Ty;
+
+        protected override int rectSize
+        {
+            get
+            {
+                return Stage.stageInstance.TileWidth;
+            }
+        }
+
+        public override Rectangle GetRectangle()
+        {
+            if (isAlive)
+                return new Rectangle((int)(position.X * Stage.stageInstance.TileWidth),
+                                    (int)(position.Y * Stage.stageInstance.TileHeight), this.rectSize, this.rectSize);
+            else
+                return new Rectangle();
+        }
+
         public Obstacle(Map map, Vector2 position, string texpath)
         {
             this.map = map;
             this.position = position;
             this.texpath = texpath;
+            this.isAlive = true;
         }
 
         public override void Update(float elapsedGameTime)
+        {
+        }
+
+        public override void PostUpdate()
         {
         }
 

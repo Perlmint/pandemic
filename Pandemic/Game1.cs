@@ -67,16 +67,10 @@ namespace Pandemic
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            stage = Stage.stageInstance;
-            map = Map.createFromStage(stage);
+            
             state = GameState.main;
             //setupOpeningState();
-            screenManager.setSizeFromStage(stage);
-            screenManager.applySizeToGraphicsMgr(graphics);
             BindKeyboardEventListener(Keys.Escape, new keyboardEventListener(this.Exit));
-            player = new Player(this);
-            player.updateScreenManager(screenManager);
-            player.updateMap(map);
 
             mainMenu = new MainMenu(this);
             gameOver = new GameOver();
@@ -97,10 +91,9 @@ namespace Pandemic
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            NPC npc = new NPC();
-            npc.LoadContent(Content);
+            NPC.LoadCommonContent(Content);
+            Player.LoadCommonContent(Content);
 
-            player.LoadContent(Content);
             mainMenu.LoadContent(Content);
             gameOver.LoadContent(Content);
             map.LoadContent(Content);
@@ -144,9 +137,14 @@ namespace Pandemic
                     break;
                 case GameState.play:
                     player.Update(elapsedTime);
-
                     npcManager.Update(elapsedTime, player.GetPosition(), player.GetBulletArray());
                     player.NPCCollision(npcManager.NPCs);
+
+                    player.Move(map.CalcRealDirection(player));
+                    npcManager.Move();
+
+                    player.PostUpdate();
+                    npcManager.PostUpdate();
 
                     break;
                 case GameState.gameover:
@@ -278,7 +276,6 @@ namespace Pandemic
 
         public void Play()
         {
-            
             changeState(GameState.play);
         }
 
@@ -341,7 +338,7 @@ namespace Pandemic
 
         protected void teardownHelpState()
         {
-            UnbindKeyboardEvent(Keys.Space);  
+            UnbindKeyboardEvent(Keys.Space);
         }
 
         protected void setupHelpState()
@@ -354,7 +351,16 @@ namespace Pandemic
         {
             MediaPlayer.Stop();
             MediaPlayer.Play(bgm2);
+            stage = Stage.stageInstance;
+            map = Map.createFromStage(stage);
+            map.LoadContent(Content);
+            screenManager.setSizeFromStage(stage);
+            screenManager.applySizeToGraphicsMgr(graphics);
+            player = new Player(this);
+            player.updateScreenManager(screenManager);
+            player.updateMap(map);
             npcManager.Initialize();
+            npcManager.map = map;
             player.Initialize(this);
             player.Spawn(Stage.stageInstance.PlayerInitialPosition);
         }
