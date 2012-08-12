@@ -22,6 +22,7 @@ namespace Pandemic
         int damage;
         int effectDamage;
         int RectSize;
+        protected override int rectSize { get { return RectSize; } }
         static int[,] effectArea;
         static Point bulletPos;        
 
@@ -75,6 +76,7 @@ namespace Pandemic
         {
             destination = dst;
             range = (dst - position).Length();
+            expectedSpeed_ = Vector2.Normalize(position - destination) * Speed;
         }
 
         public void SetEffectArea(int[,] area)
@@ -100,8 +102,22 @@ namespace Pandemic
         {
             switch (state)
             {
+                case BulletState.Explosion:
+                    explodeTimeout += elapsedGameTime;
+                    if (explodeTimeout >= TimeOut)
+                    {
+                        isAlive = false;
+                    }
+                    break;
+            }
+        }
+
+        public override void PostUpdate()
+        {
+            switch (state)
+            {
                 case BulletState.Going:
-                    position += Vector2.Normalize(position - destination) * Speed;
+                    position += expectedSpeed_;
                     displacement += Speed;
 
                     if (displacement >= range)
@@ -109,17 +125,6 @@ namespace Pandemic
                         Explode();
                     }
 
-                    rect.X = (int)position.X;
-                    rect.Y = (int)position.Y;
-                    rect.Width = RectSize;
-                    rect.Height = RectSize;
-                    break;
-                case BulletState.Explosion:
-                    explodeTimeout += elapsedGameTime;
-                    if (explodeTimeout >= TimeOut)
-                    {
-                        isAlive = false;
-                    }
                     break;
             }
         }
@@ -143,9 +148,9 @@ namespace Pandemic
                     {
                         if (effectArea[i, j] == 1)
                         {
-                            rectHashSet.Add(new Rectangle((i - bulletPos.X) * RectSize + rect.X,
-                                (j - bulletPos.Y) * RectSize + rect.Y,
-                                RectSize, RectSize));
+                            rectHashSet.Add(new Rectangle((i - bulletPos.X) * RectSize + GetRectangle().X,
+                                (j - bulletPos.Y) * RectSize + GetRectangle().Y,
+                                GetRectangle().Width, GetRectangle().Height));
                         }
                     }
                 }
@@ -186,11 +191,10 @@ namespace Pandemic
                 switch (state)
                 {
                     case BulletState.Going:
-                        spriteBatch.Draw(tex, rect, Color.White);
+                        spriteBatch.Draw(tex, screen.translateWorldToScreen(GetRectangle()), Color.White);
                         break;
                     case BulletState.Explosion:
                         int i, j;
-                        Rectangle effectRect = new Rectangle(0, 0, RectSize, RectSize);
 
                         for (i = 0; i < Math.Sqrt(effectArea.Length); i++)
                         {
@@ -198,9 +202,14 @@ namespace Pandemic
                             {
                                 if (effectArea[i,j] == 1)
                                 {
-                                    effectRect.X = RectSize * (i - bulletPos.X) + rect.X;
-                                    effectRect.Y = RectSize * (j - bulletPos.Y) + rect.Y;
-                                    spriteBatch.Draw(effectTex, effectRect, Color.White);
+                                    Rectangle effectRect = new Rectangle()
+                                    {
+                                        X = RectSize * (i - bulletPos.X) + GetRectangle().X,
+                                        Y = RectSize * (j - bulletPos.Y) + GetRectangle().Y,
+                                        Width = RectSize,
+                                        Height = RectSize
+                                    };
+                                    spriteBatch.Draw(effectTex, screen.translateWorldToScreen(effectRect), Color.White);
                                 }
                             }
                         }

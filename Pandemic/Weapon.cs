@@ -13,20 +13,21 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace Pandemic
 {
-    class Weapon
+    class Weapon : GameObject
     {
         int range;
         int[,] atkAreaUp;
         int[,] atkAreaDown;
         int[,] atkAreaRight;
         int[,] atkAreaLeft;
-        Vector2 position;
 
         float atkCooldown;
 
-        Texture2D bulletTex;
-        Texture2D effectTex;
+        static Texture2D bulletTex;
+        static Texture2D effectTex;
         Texture2D tileTex;
+
+        const int RectSize = 30;
 
         int damage;
         float effectTimeOut;
@@ -44,20 +45,34 @@ namespace Pandemic
 
             atkCooldown = Stage.stageInstance.WeaponSpec[name].Cooldown;
             effectTimeOut = Stage.stageInstance.WeaponSpec[name].EffectTimeOut;
-            damage = 34;
+            damage = Stage.stageInstance.WeaponSpec[name].damage;
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
         }
 
-        public void Spawn(Vector2 pos)
+        public override void Spawn(Vector2 pos)
         {
+            base.Spawn(pos);
             position = pos;
             alive = true;
         }
 
-        public void LoadContent(ContentManager Content)
+        public override void Update(float elapsedGameTime)
+        {
+        }
+
+        public override void PostUpdate()
+        {
+        }
+
+        public override void LoadContent(ContentManager Content)
+        {
+        }
+
+        public static void LoadCommonContent(ContentManager Content)
         {
             bulletTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Bullet["basic"].DefaultTexture);
             effectTex = Content.Load<Texture2D>(Stage.stageInstance.NonUnits.Effect["basic"][0]);
@@ -114,11 +129,11 @@ namespace Pandemic
             return range;
         }
 
-        public void Draw(SpriteBatch spriteBatch, ScreenManager screen)
+        public override void Draw(SpriteBatch spriteBatch, ScreenManager screen)
         {
             if (alive)
             {
-                spriteBatch.Draw(tileTex, position, Color.White);
+                spriteBatch.Draw(tileTex, screen.translateWorldToScreen(GetRectangle()), Color.White);
             }
         }
     }
