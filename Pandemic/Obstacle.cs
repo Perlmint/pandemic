@@ -19,8 +19,11 @@ namespace Pandemic
         Vector2 position;
         string texpath;
         Texture2D tex;
-        public Obstacle(Vector2 position, string texpath)
+        Map map;
+        int Tx, Ty;
+        public Obstacle(Map map, Vector2 position, string texpath)
         {
+            this.map = map;
             this.position = position;
             this.texpath = texpath;
         }
@@ -31,6 +34,14 @@ namespace Pandemic
 
         public override void Draw(SpriteBatch spriteBatch, ScreenManager screen)
         {
+            spriteBatch.Draw(tex,
+                screen.translateWorldToScreen(new Rectangle()
+                {
+                    X = (int) (position.X * Stage.stageInstance.TileWidth),
+                    Y = (int) (position.Y * Stage.stageInstance.TileHeight),
+                    Width = Stage.stageInstance.TileWidth,
+                    Height = Stage.stageInstance.TileHeight
+                }), Color.White);
         }
 
         public override void LoadContent(ContentManager Content)
