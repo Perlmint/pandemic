@@ -226,29 +226,21 @@ namespace Pandemic
         void MoveUp()
         {
             updatePosition(new Vector2(0, - Speed));
-            ChangeDirection(Direction.up);
-            tex = texUp[weaponName];
         }
 
         void MoveDown()
         {
             updatePosition(new Vector2(0, + Speed));
-            ChangeDirection(Direction.down);
-            tex = texDown[weaponName];
         }
 
         void MoveLeft()
         {
             updatePosition(new Vector2(- Speed, 0));
-            ChangeDirection(Direction.left);
-            tex = texLeft[weaponName];
         }
 
         void MoveRight()
         {
             updatePosition(new Vector2(+ Speed, 0));
-            ChangeDirection(Direction.right);
-            tex = texRight[weaponName];
         }
 
         bool updatePosition(Vector2 offset)
