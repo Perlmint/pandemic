@@ -75,6 +75,7 @@ namespace Pandemic
             mainMenu = new MainMenu(this);
             gameOver = new GameOver();
             help = new ImageDisplay();
+            map = new Map();
             //mainMenu.Initialize();
 
             setupMainState();
