@@ -18,6 +18,8 @@ namespace Pandemic
 
         List<NPC> NPCList;
 
+        public Map map;
+
         public List<NPC> NPCs { get { return NPCList; } }
 
         Random randomGenerator;
@@ -74,6 +76,23 @@ namespace Pandemic
                 npc.CheckBulletCollision(playerBullets);
             }
 
+            NPCList.RemoveAll(npc => !npc.IsAlive());
+        }
+
+        public void Move()
+        {
+            foreach (NPC npc in NPCList)
+            {
+                npc.Move(map.CalcRealDirection(npc));
+            }
+        }
+
+        public void PostUpdate()
+        {
+            foreach (NPC npc in NPCList)
+            {
+                npc.PostUpdate();
+            }
             NPCList.RemoveAll(npc => !npc.IsAlive());
         }
 

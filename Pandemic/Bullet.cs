@@ -22,6 +22,7 @@ namespace Pandemic
         int damage;
         int effectDamage;
         int RectSize;
+        protected override int rectSize { get { return RectSize; } }
         static int[,] effectArea;
         static Point bulletPos;        
 
@@ -75,6 +76,7 @@ namespace Pandemic
         {
             destination = dst;
             range = (dst - position).Length();
+            expectedSpeed_ = Vector2.Normalize(position - destination) * Speed;
         }
 
         public void SetEffectArea(int[,] area)
@@ -100,8 +102,22 @@ namespace Pandemic
         {
             switch (state)
             {
+                case BulletState.Explosion:
+                    explodeTimeout += elapsedGameTime;
+                    if (explodeTimeout >= TimeOut)
+                    {
+                        isAlive = false;
+                    }
+                    break;
+            }
+        }
+
+        public override void PostUpdate()
+        {
+            switch (state)
+            {
                 case BulletState.Going:
-                    position += Vector2.Normalize(position - destination) * Speed;
+                    position += expectedSpeed_;
                     displacement += Speed;
 
                     if (displacement >= range)
@@ -109,20 +125,6 @@ namespace Pandemic
                         Explode();
                     }
 
-                    SetRectangle(new Rectangle()
-                    {
-                        X = (int)position.X,
-                        Y = (int)position.Y,
-                        Width = RectSize,
-                        Height = RectSize
-                    });
-                    break;
-                case BulletState.Explosion:
-                    explodeTimeout += elapsedGameTime;
-                    if (explodeTimeout >= TimeOut)
-                    {
-                        isAlive = false;
-                    }
                     break;
             }
         }

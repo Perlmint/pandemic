@@ -24,7 +24,7 @@ namespace Pandemic
         const int MaxHP = 100;
         static Texture2D dead;
         static Texture2D tex;
-        const int RectSize = 30;
+        protected override int rectSize { get { return 30; } }
 
         float corpseTimer;
         const float CorpseTimeOut = 3.0f;
@@ -35,10 +35,14 @@ namespace Pandemic
 
         State state;
 
-        public override void LoadContent(ContentManager Content)
+        public static void LoadCommonContent(ContentManager Content)
         {
             tex = Content.Load<Texture2D>(Stage.stageInstance.Units.Enemy);
             dead = Content.Load<Texture2D>(Stage.stageInstance.Units.Dead);
+        }
+
+        public override void LoadContent(ContentManager Content)
+        {
         }
 
         public override void Spawn(Vector2 pos)
@@ -63,26 +67,20 @@ namespace Pandemic
                 {
                     case State.alive:
                         {
+                            if (hp < 0)
+                            {
+                                corpseTimer = 0;
+                                state = State.dead;
+                                return;
+                            }
+
                             Vector2 temp = destination - position;
                             if (temp.Length() > 100)
                             {
                                 temp += new Vector2((float)(randomGenerator.NextDouble() - 0.5) * 100);
                             }
 
-                            position += Vector2.Normalize(temp) * Speed;
-
-                            if (hp < 0)
-                            {
-                                corpseTimer = 0;
-                                state = State.dead;
-                            }
-                            SetRectangle(new Rectangle()
-                            {
-                                X = (int)position.X,
-                                Y = (int)position.Y,
-                                Width = RectSize,
-                                Height = RectSize
-                            });
+                            expectedSpeed_ = Vector2.Normalize(temp) * Speed;
                         }
                         break;
                     case State.almost_dead:
@@ -107,20 +105,17 @@ namespace Pandemic
                                 temp += new Vector2((float)(randomGenerator.NextDouble() - 0.5) * 100);
                             }
 
-                            position += Vector2.Normalize(temp) * Speed;
-
-                            SetRectangle(new Rectangle()
-                            {
-                                X = (int)position.X,
-                                Y = (int)position.Y,
-                                Width = RectSize,
-                                Height = RectSize
-                            });
+                            expectedSpeed_ = Vector2.Normalize(temp) * Speed;
                         }
                         break;
                 }
             }
         }
+
+        public override void PostUpdate()
+        {
+        }
+
 
         public void CheckBulletCollision(Bullet[] bullets)
         {

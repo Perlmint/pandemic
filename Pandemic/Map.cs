@@ -65,6 +65,21 @@ namespace Pandemic
             foreach (Obstacle o in Obstacles)
                 o.Draw(spriteBatch, screen);
         }
+
+        public Vector2 CalcRealDirection(GameObject gObject)
+        {
+            foreach (Obstacle o in Obstacles)
+            {
+                Rectangle tmpRect = o.GetRectangle();
+                tmpRect.Offset(-(int)gObject.expectedSpeed.X, -(int)gObject.expectedSpeed.Y);
+                if (gObject.Intersects(tmpRect) /*&&
+                    gObject.CollidesWith(o, true, new Vector2(-(int)gObject.expectedSpeed.X, -(int)gObject.expectedSpeed.Y))*/)
+                {
+                    return new Vector2();
+                }
+            }
+            return gObject.expectedSpeed;
+        }
         
         public Rectangle ToRectangle()
         {

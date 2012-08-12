@@ -37,6 +37,7 @@ namespace Pandemic
         static Dictionary<string, Texture2D> texLeft;
         static Dictionary<string, Texture2D> texRight;
         string weaponName;
+        protected override int rectSize { get { return 30; } }
 
         float atkCooldown;
 
@@ -68,15 +69,19 @@ namespace Pandemic
             {
                 bullets[i] = Bullet.newBasicBullet(weapon.GetDamage(), weapon.GetEffectTimeOut());
             }
-
-            texUp = new Dictionary<string, Texture2D>();
-            texDown = new Dictionary<string, Texture2D>();
-            texLeft = new Dictionary<string, Texture2D>();
-            texRight = new Dictionary<string, Texture2D>();
         }
 
         public override void LoadContent(ContentManager Content)
         {
+        }
+
+        public static void LoadCommonContent(ContentManager Content)
+        {
+            texUp = new Dictionary<string, Texture2D>();
+            texDown = new Dictionary<string, Texture2D>();
+            texLeft = new Dictionary<string, Texture2D>();
+            texRight = new Dictionary<string, Texture2D>();
+
             //tex = Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["sword"].DefaultTexture);
             texUp.Add("sword", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["sword"][PlayerDirection.up]));
             texDown.Add("sword", Content.Load<Texture2D>(Stage.stageInstance.Units.PlayerArmed["sword"][PlayerDirection.down]));
@@ -105,7 +110,7 @@ namespace Pandemic
 
             dead = Content.Load<Texture2D>(Stage.stageInstance.Units.Player_Death);
             heart = Content.Load<Texture2D>("heart");
-            weapon.LoadContent(Content);
+            Weapon.LoadCommonContent(Content);
         }
 
         public Bullet[] GetBulletArray()
@@ -155,13 +160,6 @@ namespace Pandemic
             switch (state)
             {
                 case State.alive:
-                    SetRectangle(new Rectangle()
-                    {
-                        X = (int)position.X,
-                        Y = (int)position.Y,
-                        Width = RectSize,
-                        Height = RectSize
-                    });
                     break;
                 case State.almost_dead:
                     break;
@@ -178,13 +176,6 @@ namespace Pandemic
                     {
                         state = State.alive;
                     }
-                    SetRectangle(new Rectangle()
-                    {
-                        X = (int)position.X,
-                        Y = (int)position.Y,
-                        Width = RectSize,
-                        Height = RectSize
-                    });
                     break;
             }
 
@@ -196,6 +187,12 @@ namespace Pandemic
 
             if (atkCooldown > 0)
                 atkCooldown -= elapsedGameTime;
+        }
+
+        public override void PostUpdate()
+        {
+            foreach (Bullet bullet in bullets)
+                bullet.PostUpdate();
         }
 
        public void NPCCollision(List<NPC> npcList)
@@ -225,22 +222,22 @@ namespace Pandemic
 
         void MoveUp()
         {
-            updatePosition(new Vector2(0, - Speed));
+            expectedSpeed_ += new Vector2(0, - Speed);
         }
 
         void MoveDown()
         {
-            updatePosition(new Vector2(0, + Speed));
+            expectedSpeed_ += new Vector2(0, + Speed);
         }
 
         void MoveLeft()
         {
-            updatePosition(new Vector2(- Speed, 0));
+            expectedSpeed_ += new Vector2(- Speed, 0);
         }
 
         void MoveRight()
         {
-            updatePosition(new Vector2(+ Speed, 0));
+            expectedSpeed_ += new Vector2(+ Speed, 0);
         }
 
         bool updatePosition(Vector2 offset)
@@ -253,6 +250,16 @@ namespace Pandemic
             }
             else
                 return false;
+        }
+
+        public override void Move(Vector2 direction)
+        {
+            if (isAlive)
+            {
+                updatePosition(direction);
+
+                expectedSpeed_ = new Vector2();
+            }
         }
 
         void ChangeDirection(Direction newDirection)
