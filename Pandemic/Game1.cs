@@ -362,13 +362,13 @@ namespace Pandemic
 
         protected void setupGameoverState()
         {
-            this.BindKeyboardEventListener(Keys.Enter,new keyboardEventListener(() => changeState(GameState.main)));
+            this.BindKeyboardEventListener(Keys.Space,new keyboardEventListener(() => changeState(GameState.main)));
             gameOver.Initialize();
         }
 
         protected void teardownGameoverState()
         {
-            this.UnbindKeyboardEvent(Keys.Enter);
+            this.UnbindKeyboardEvent(Keys.Space);
         }
     }
 }
